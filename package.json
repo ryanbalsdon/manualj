@@ -1,0 +1,42 @@
+{
+  "name": "manualj",
+  "version": "0.1.0",
+  "description": "A TypeScript library for whole-home manual-j-style heat load calculations.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "keywords": [
+    "manualj",
+    "hvac",
+    "heat load",
+    "acca",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/manualj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/manualj/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/manualj#readme",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "eslint": "^9.29.0",
+    "prettier": "^3.6.0",
+    "typescript": "^5.8.3"
+  }
+}
