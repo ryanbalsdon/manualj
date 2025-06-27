@@ -1,8 +1,8 @@
-import { calculateRoomHeatLoad } from '../src/index';
+import { calculateRoomHeatLoad } from "../src/index";
 
-describe('calculateHeatLoad', () => {
-  it('should return a valid heat load value', () => {
-    const result = calculateRoomHeatLoad('test');
+describe("calculateHeatLoad", () => {
+  it("should return a valid heat load value", () => {
+    const result = calculateRoomHeatLoad("test");
     expect(result).toBeDefined();
   });
 });

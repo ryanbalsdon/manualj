@@ -2,11 +2,11 @@ import {
   getUniqueStates,
   getLocationsForState,
   getWinterDesignTemperature,
-} from './climate-utils';
-import { climateData } from './data/climate';
+} from "./climate-utils";
+import { climateData } from "./data/climate";
 
-describe('climate-utils', () => {
-  test('getUniqueStates returns all unique states', () => {
+describe("climate-utils", () => {
+  test("getUniqueStates returns all unique states", () => {
     const states = getUniqueStates();
     expect(states).toEqual([
       "ALABAMA",
@@ -75,7 +75,7 @@ describe('climate-utils', () => {
     ]);
   });
 
-  test('getLocationsForState returns locations for existing state', () => {
+  test("getLocationsForState returns locations for existing state", () => {
     const locations = getLocationsForState("ONTARIO");
     expect(locations).toEqual([
       "Belleville",
@@ -103,19 +103,27 @@ describe('climate-utils', () => {
     ]);
   });
 
-  test('getWinterDesignTemperature returns temperature for valid location', () => {
+  test("getLocationsForState returns empty array for unknown state", () => {
+    const locations = getLocationsForState("NonExistentState");
+    expect(locations).toEqual([]);
+  });
+
+  test("getWinterDesignTemperature returns temperature for valid location", () => {
     const temp = getWinterDesignTemperature("ONTARIO", "Ottawa AP (S)");
     expect(temp).toBe(-13);
   });
 
-  test('getLocationsForState returns empty array for unknown state', () => {
-    const locations = getLocationsForState('NonExistentState');
-    expect(locations).toEqual([]);
+  test("getWinterDesignTemperature returns null for unknown location", () => {
+    const testState = climateData[0].state;
+    const temp = getWinterDesignTemperature(testState, "NonExistentCity");
+    expect(temp).toBeNull();
   });
 
-  test('getWinterDesignTemperature returns null for unknown location', () => {
-    const testState = climateData[0].state;
-    const temp = getWinterDesignTemperature(testState, 'NonExistentCity');
+  test("getWinterDesignTemperature returns null for unknown state", () => {
+    const temp = getWinterDesignTemperature(
+      "NonExistentState",
+      "NonExistentCity",
+    );
     expect(temp).toBeNull();
   });
 });

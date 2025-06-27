@@ -2,14 +2,17 @@
   "name": "manualj",
   "version": "0.1.0",
   "description": "A TypeScript library for whole-home manual-j-style heat load calculations.",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist coverage",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
     "test": "jest",
-    "prepublishOnly": "npm run build",
-    "lint": "eslint . --ext .ts --config eslint.config.mjs",
-    "format": "prettier --single-quote --write \"src/**/*.ts\""
+    "test:watch": "jest --watch",
+    "prepare": "npm run build"
   },
   "keywords": [
     "manualj",
@@ -40,8 +43,12 @@
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
     "eslint": "^9.29.0",
-    "jest": "^30.0.2",
-    "prettier": "^3.6.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "jest": "^30.0.3",
+    "prettier": "^3.6.2",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
   }
