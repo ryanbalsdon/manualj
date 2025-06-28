@@ -1,4 +1,4 @@
-import { climateData } from "./data/climate";
+import { climateData } from "@/data/climate";
 
 const buildStateMap = (() => {
   let cacheBuilt = false;

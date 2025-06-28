@@ -2,8 +2,9 @@ import {
   getUniqueStates,
   getLocationsForState,
   getWinterDesignTemperature,
-} from "./climate-utils";
-import { climateData } from "./data/climate";
+} from "./climate";
+
+import { climateData } from "@/data/climate";
 
 describe("climate-utils", () => {
   test("getUniqueStates returns all unique states", () => {

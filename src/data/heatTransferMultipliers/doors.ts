@@ -1,4 +1,4 @@
-export const doorHeatTransferMulitpliers = [
+export const doorHeatTransferMultipliers = [
   {
     windowType: "Sliding Glass Doors",
     glassType: "Single Pane, Clear Glass",

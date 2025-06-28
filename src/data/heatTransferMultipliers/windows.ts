@@ -170,7 +170,7 @@ export const windowHeatTransferMultipliers = [
   {
     windowType: "Double Pane Window & Storm",
     glassType: "Clear Glass",
-    frame极Type: "Metal Frame",
+    frameType: "Metal Frame",
     uFactor: 0.49,
   },
   {

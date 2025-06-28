@@ -12,5 +12,6 @@ export default {
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1', // strip .js extensions from imports
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
 };
