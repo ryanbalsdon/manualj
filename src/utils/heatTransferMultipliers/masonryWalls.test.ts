@@ -12,16 +12,14 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
   });
 
   test("getInsulationTypesForMasonryWallType returns insulation types for '8\" or 12\" Block'", () => {
-    const insulationTypes = getInsulationTypesForMasonryWallType(
-      '8" or 12" Block',
-    );
+    const insulationTypes =
+      getInsulationTypesForMasonryWallType('8" or 12" Block');
     expect(insulationTypes).toEqual(["None", "R-5", "R-11", "R-19"]);
   });
 
   test("getInsulationTypesForMasonryWallType returns empty array for invalid wall type", () => {
-    const insulationTypes = getInsulationTypesForMasonryWallType(
-      "InvalidWallType",
-    );
+    const insulationTypes =
+      getInsulationTypesForMasonryWallType("InvalidWallType");
     expect(insulationTypes).toEqual([]);
   });
 

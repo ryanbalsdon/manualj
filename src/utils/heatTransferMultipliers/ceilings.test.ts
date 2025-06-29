@@ -11,7 +11,7 @@ describe("Ceiling Heat Transfer Utilities", () => {
     expect(ceilingTypes).toEqual([
       "Ventilated Attic",
       "Exposed Beams",
-      "Roof-Ceiling Combination"
+      "Roof-Ceiling Combination",
     ]);
   });
 
@@ -28,7 +28,7 @@ describe("Ceiling Heat Transfer Utilities", () => {
       "R-38 Insulation",
       "R-44 Insulation",
       "R-57 Insulation",
-      "Wood Decking, No Insulation"
+      "Wood Decking, No Insulation",
     ]);
   });
 
@@ -56,7 +56,7 @@ describe("Ceiling Heat Transfer Utilities", () => {
     const multiplier = calculateHeatTransferMultiplier(
       "Ventilated Attic",
       "No Insulation",
-      15
+      15,
     );
     expect(multiplier).toBe(8.985); // 0.599 * 15
   });
@@ -65,7 +65,7 @@ describe("Ceiling Heat Transfer Utilities", () => {
     const multiplier = calculateHeatTransferMultiplier(
       "InvalidCeiling",
       "No Insulation",
-      15
+      15,
     );
     expect(multiplier).toBeNull();
   });
@@ -74,7 +74,7 @@ describe("Ceiling Heat Transfer Utilities", () => {
     const multiplier = calculateHeatTransferMultiplier(
       "Ventilated Attic",
       "InvalidConstruction",
-      15
+      15,
     );
     expect(multiplier).toBeNull();
   });

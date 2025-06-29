@@ -14,43 +14,41 @@ describe("Floor Heat Transfer Utilities", () => {
       "Open Crawl Space or Garage",
       "Basement Floors",
       "Concrete Slab on Grade",
-      "Concrete Slab with Perimeter Warm Air Duct System"
+      "Concrete Slab with Perimeter Warm Air Duct System",
     ]);
   });
 
   test("getConstructionTypesForFloorType returns construction types for 'Unheated Basement'", () => {
     const constructionTypes = getConstructionTypesForFloorType(
-      "Unheated Basement or Crawl Space"
+      "Unheated Basement or Crawl Space",
     );
-    expect(constructionTypes).toEqual([
-      "Hardwood Floor",
-      "Carpeted Floor"
-    ]);
+    expect(constructionTypes).toEqual(["Hardwood Floor", "Carpeted Floor"]);
   });
 
   test("getConstructionTypesForFloorType returns empty array for invalid floor type", () => {
-    const constructionTypes = getConstructionTypesForFloorType("InvalidFloorType");
+    const constructionTypes =
+      getConstructionTypesForFloorType("InvalidFloorType");
     expect(constructionTypes).toEqual([]);
   });
 
   test("getInsulationTypesForConstruction returns insulation types for 'Hardwood Floor' in 'Unheated Basement'", () => {
     const insulationTypes = getInsulationTypesForConstruction(
       "Unheated Basement or Crawl Space",
-      "Hardwood Floor"
+      "Hardwood Floor",
     );
     expect(insulationTypes).toEqual([
       "No Insulation",
       "R-11",
       "R-13",
       "R-19",
-      "R-30"
+      "R-30",
     ]);
   });
 
   test("getInsulationTypesForConstruction returns empty array for invalid floor type", () => {
     const insulationTypes = getInsulationTypesForConstruction(
       "InvalidFloorType",
-      "Hardwood Floor"
+      "Hardwood Floor",
     );
     expect(insulationTypes).toEqual([]);
   });
@@ -58,7 +56,7 @@ describe("Floor Heat Transfer Utilities", () => {
   test("getInsulationTypesForConstruction returns empty array for invalid construction type", () => {
     const insulationTypes = getInsulationTypesForConstruction(
       "Unheated Basement or Crawl Space",
-      "InvalidConstruction"
+      "InvalidConstruction",
     );
     expect(insulationTypes).toEqual([]);
   });
@@ -67,7 +65,7 @@ describe("Floor Heat Transfer Utilities", () => {
     const uFactor = getUFactor(
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
-      "No Insulation"
+      "No Insulation",
     );
     expect(uFactor).toBe(0.312);
   });
@@ -76,7 +74,7 @@ describe("Floor Heat Transfer Utilities", () => {
     const uFactor = getUFactor(
       "InvalidFloorType",
       "Hardwood Floor",
-      "No Insulation"
+      "No Insulation",
     );
     expect(uFactor).toBeNull();
   });
@@ -85,7 +83,7 @@ describe("Floor Heat Transfer Utilities", () => {
     const uFactor = getUFactor(
       "Unheated Basement or Crawl Space",
       "InvalidConstruction",
-      "No Insulation"
+      "No Insulation",
     );
     expect(uFactor).toBeNull();
   });
@@ -94,7 +92,7 @@ describe("Floor Heat Transfer Utilities", () => {
     const uFactor = getUFactor(
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
-      "InvalidInsulation"
+      "InvalidInsulation",
     );
     expect(uFactor).toBeNull();
   });
@@ -104,7 +102,7 @@ describe("Floor Heat Transfer Utilities", () => {
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
       "No Insulation",
-      15
+      15,
     );
     expect(multiplier).toBe(4.68); // 0.312 * 15
   });
@@ -114,7 +112,7 @@ describe("Floor Heat Transfer Utilities", () => {
       "InvalidFloorType",
       "Hardwood Floor",
       "No Insulation",
-      15
+      15,
     );
     expect(multiplier).toBeNull();
   });
@@ -124,7 +122,7 @@ describe("Floor Heat Transfer Utilities", () => {
       "Unheated Basement or Crawl Space",
       "InvalidConstruction",
       "No Insulation",
-      15
+      15,
     );
     expect(multiplier).toBeNull();
   });
@@ -134,7 +132,7 @@ describe("Floor Heat Transfer Utilities", () => {
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
       "InvalidInsulation",
-      15
+      15,
     );
     expect(multiplier).toBeNull();
   });

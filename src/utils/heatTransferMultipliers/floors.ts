@@ -2,7 +2,10 @@ import { floorHeatTransferMultipliers as floorData } from "@/data/heatTransferMu
 
 const buildFloorComponentMap = (() => {
   let cacheBuilt = false;
-  const floorCache = new Map<string, Map<string, Map<string, { uFactor: number }>>>();
+  const floorCache = new Map<
+    string,
+    Map<string, Map<string, { uFactor: number }>>
+  >();
 
   return () => {
     if (cacheBuilt) return floorCache;
@@ -43,12 +46,12 @@ export function getConstructionTypesForFloorType(floorType: string): string[] {
 
 export function getInsulationTypesForConstruction(
   floorType: string,
-  constructionType: string
+  constructionType: string,
 ): string[] {
   const floorMap = buildFloorComponentMap();
   const constructionMap = floorMap.get(floorType);
   if (!constructionMap) return [];
-  
+
   const insulationMap = constructionMap.get(constructionType);
   return insulationMap ? Array.from(insulationMap.keys()) : [];
 }
@@ -56,15 +59,15 @@ export function getInsulationTypesForConstruction(
 export function getUFactor(
   floorType: string,
   constructionType: string,
-  insulationRValue: string
+  insulationRValue: string,
 ): number | null {
   const floorMap = buildFloorComponentMap();
   const constructionMap = floorMap.get(floorType);
   if (!constructionMap) return null;
-  
+
   const insulationMap = constructionMap.get(constructionType);
   if (!insulationMap) return null;
-  
+
   const uFactorData = insulationMap.get(insulationRValue);
   return uFactorData ? uFactorData.uFactor : null;
 }
@@ -73,7 +76,7 @@ export function calculateHeatTransferMultiplier(
   floorType: string,
   constructionType: string,
   insulationRValue: string,
-  tempDifference: number
+  tempDifference: number,
 ): number | null {
   const uFactor = getUFactor(floorType, constructionType, insulationRValue);
   if (uFactor === null) return null;

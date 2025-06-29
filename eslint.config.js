@@ -5,35 +5,34 @@ import tsParser from '@typescript-eslint/parser';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 
-const sharedConfig = {
-  plugins: {
-    '@typescript-eslint': typescriptEslint,
-    import: eslintPluginImport,
-    'unused-imports': eslintPluginUnusedImports,
-    prettier: prettierPlugin
-  },
-  rules: {
-    // TypeScript rules
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/consistent-type-imports': 'warn',
+const plugins = {
+  '@typescript-eslint': typescriptEslint,
+  import: eslintPluginImport,
+  'unused-imports': eslintPluginUnusedImports,
+  prettier: prettierPlugin
+};
 
-    // Unused imports
-    'unused-imports/no-unused-imports': 'warn',
+const rules = {
+  // TypeScript rules
+  '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+  '@typescript-eslint/explicit-function-return-type': 'off',
+  '@typescript-eslint/no-explicit-any': 'warn',
+  '@typescript-eslint/consistent-type-imports': 'warn',
 
-    // Import order (optional)
-    'import/order': [
-      'warn',
-      {
-        groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
-        'newlines-between': 'always',
-      },
-    ],
+  // Unused imports
+  'unused-imports/no-unused-imports': 'warn',
 
-    // Prettier
-    'prettier/prettier': 'warn'
-  },
+  // Import order (optional)
+  'import/order': [
+    'warn',
+    {
+      groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
+      'newlines-between': 'always',
+    },
+  ],
+
+  // Prettier
+  'prettier/prettier': 'warn'
 }
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
@@ -49,7 +48,8 @@ export default [
         ecmaVersion: 2022,
       },
     },
-    ...sharedConfig,
+    plugins,
+    rules,
   },
   {
     files: ['**/*.test.ts'],
@@ -62,7 +62,11 @@ export default [
         ecmaVersion: 2022,
       },
     },
-    ...sharedConfig,
+    plugins,
+    rules: {
+      ...rules,
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
   },
   {
     ignores: ['dist/', 'coverage/'],

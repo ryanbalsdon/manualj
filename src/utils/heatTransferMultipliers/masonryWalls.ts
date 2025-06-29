@@ -41,7 +41,9 @@ export function getMasonryWallTypes(): string[] {
   return Array.from(masonryWallMap.keys());
 }
 
-export function getInsulationTypesForMasonryWallType(wallType: string): string[] {
+export function getInsulationTypesForMasonryWallType(
+  wallType: string,
+): string[] {
   const masonryWallMap = buildMasonryWallComponentMap();
   const insulationMap = masonryWallMap.get(wallType);
   return insulationMap ? Array.from(insulationMap.keys()) : [];
@@ -79,17 +81,18 @@ export function calculateMasonryWallHeatTransferMultiplier(
     uFactorBelowGrade = uFactors.uFactorAboveGrade;
   } else if (feetBelowGrade > 2 && feetBelowGrade <= 5) {
     uFactorBelowGrade = uFactors.uFactorCrawlspace ?? 0;
-  } else { // feetBelowGrade > 5
+  } else {
+    // feetBelowGrade > 5
     uFactorBelowGrade = uFactors.uFactorBasement ?? 0;
   }
 
   const totalFeet = feetAboveGrade + feetBelowGrade;
   if (totalFeet === 0) return 0; // Avoid division by zero
 
-  const weightedUFactor = (
-    uFactors.uFactorAboveGrade * feetAboveGrade +
-    uFactorBelowGrade * feetBelowGrade
-  ) / totalFeet;
+  const weightedUFactor =
+    (uFactors.uFactorAboveGrade * feetAboveGrade +
+      uFactorBelowGrade * feetBelowGrade) /
+    totalFeet;
 
   return weightedUFactor * tempDifference;
 }
