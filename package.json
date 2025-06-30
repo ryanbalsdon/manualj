@@ -1,12 +1,13 @@
 {
   "name": "manualj",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "A TypeScript library for whole-home manual-j-style heat load calculations.",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "clean": "rm -rf dist coverage",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
@@ -21,21 +22,11 @@
     "acca",
     "typescript"
   ],
-  "author": "",
+  "author": "ryanbalsdon",
   "license": "MIT",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YOUR_USERNAME/manualj.git"
+    "url": "git+https://github.com/ryanbalsdon/manualj.git"
   },
-  "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/manualj/issues"
-  },
-  "homepage": "https://github.com/YOUR_USERNAME/manualj#readme",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@types/jest": "^30.0.0",
@@ -50,6 +41,7 @@
     "jest": "^30.0.3",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.0",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }
 }
