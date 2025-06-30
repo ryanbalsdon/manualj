@@ -49,7 +49,6 @@ describe("Climate", () => {
 
   it("handles invalid locations gracefully", () => {
     // Test with empty string
-    const originalLocation = climate.location;
     climate.location = "";
     expect(climate.location).not.toBe("");
     expect(climate.location).toBeDefined();
@@ -66,9 +65,9 @@ describe("Climate", () => {
   });
 
   it("sets location with valid value", () => {
-      const newLocation = climate.validLocations[1];
-      climate.location = newLocation;
-      expect(climate.location).toBe(newLocation);
+    const newLocation = climate.validLocations[1];
+    climate.location = newLocation;
+    expect(climate.location).toBe(newLocation);
   });
 
   it("resets to default location when invalid value is provided", () => {
@@ -83,7 +82,7 @@ describe("Climate", () => {
     const climate = new Climate();
     (climate as any)._state = "invalid";
     (climate as any)._location = "invalid";
-  
+
     expect(() => climate.winterDesignTemperature).toThrow(
       "Could not find WInter Design Temperature for combination",
     );

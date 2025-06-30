@@ -60,7 +60,10 @@ export class Climate {
   }
 
   get winterDesignTemperature(): number {
-    const winterDesignTemperature = getWinterDesignTemperature(this._state, this._location);
+    const winterDesignTemperature = getWinterDesignTemperature(
+      this._state,
+      this._location,
+    );
 
     if (winterDesignTemperature === null) {
       throw new Error(

@@ -120,7 +120,7 @@ describe("Window", () => {
     (win as any)._windowType = "invalid";
     (win as any)._glassType = "invalid";
     (win as any)._frameType = "invalid";
-  
+
     expect(() => win.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );

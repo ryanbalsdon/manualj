@@ -17,10 +17,7 @@ describe("MasonryWall", () => {
 
   it("sets and gets valid wall types", () => {
     const types = masonryWall.validMasonryWallTypes;
-    expect(types).toEqual([
-      '8" or 12" Block',
-      '4" Brick + 8" Block',
-    ]);
+    expect(types).toEqual(['8" or 12" Block', '4" Brick + 8" Block']);
 
     masonryWall.wallType = types[1];
     expect(masonryWall.wallType).toBe(types[1]);
@@ -47,12 +44,7 @@ describe("MasonryWall", () => {
     // Set wall type to one with multiple insulation options for testing
     masonryWall.wallType = '8" or 12" Block';
     const types = masonryWall.validInsulationTypes;
-    expect(types).toEqual([
-      "None",
-      "R-5",
-      "R-11",
-      "R-19",
-    ]);
+    expect(types).toEqual(["None", "R-5", "R-11", "R-19"]);
 
     masonryWall.insulation = types[1];
     expect(masonryWall.insulation).toBe(types[1]);
@@ -103,7 +95,7 @@ describe("MasonryWall", () => {
     expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(0);
   });
 
-   it("returns 0 heat loss if tempDifference is 0", () => {
+  it("returns 0 heat loss if tempDifference is 0", () => {
     masonryWall.length = 20;
     masonryWall.wallType = '8" or 12" Block';
     masonryWall.insulation = "None";
@@ -114,7 +106,7 @@ describe("MasonryWall", () => {
     expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(0);
   });
 
-   it("returns 0 heat loss if feetAboveGrade and feetBelowGrade are 0", () => {
+  it("returns 0 heat loss if feetAboveGrade and feetBelowGrade are 0", () => {
     masonryWall.length = 20;
     masonryWall.wallType = '8" or 12" Block';
     masonryWall.insulation = "None";
@@ -124,7 +116,6 @@ describe("MasonryWall", () => {
 
     expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(0);
   });
-
 
   it("throws error if combination is not found", () => {
     masonryWall.length = 10;
@@ -141,7 +132,7 @@ describe("MasonryWall", () => {
 
   it("passes some specific examples", () => {
     masonryWall.wallType = '8" or 12" Block';
-    masonryWall.insulation = 'R-5';
+    masonryWall.insulation = "R-5";
     masonryWall.feetAboveGrade = 3;
     masonryWall.feetBelowGrade = 5;
     masonryWall.length = 160;

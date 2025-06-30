@@ -121,7 +121,7 @@ describe("Door", () => {
     (testDoor as any)._doorType = "invalid";
     (testDoor as any)._glassType = "invalid";
     (testDoor as any)._frameType = "invalid";
-  
+
     expect(() => testDoor.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );

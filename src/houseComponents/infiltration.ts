@@ -1,4 +1,9 @@
-import { Tightness, airChangesPerHour, infiltrationCfm, infiltrationHeatLoss } from "@/utils/infiltration";
+import {
+  Tightness,
+  airChangesPerHour,
+  infiltrationCfm,
+  infiltrationHeatLoss,
+} from "@/utils/infiltration";
 export { Tightness } from "@/utils/infiltration";
 
 export class Infiltration {
@@ -27,7 +32,11 @@ export class Infiltration {
   }
 
   calculateHeatLoss(temperatureDifference: number): number {
-    const airChanges = airChangesPerHour(this.tightness, this.floorAreaIncludingBasement, this.fireplaces);
+    const airChanges = airChangesPerHour(
+      this.tightness,
+      this.floorAreaIncludingBasement,
+      this.fireplaces,
+    );
     const cfm = infiltrationCfm(airChanges, this.aboveGradeVolume);
     return infiltrationHeatLoss(cfm, temperatureDifference);
   }

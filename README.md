@@ -1,10 +1,12 @@
 # ManualJ
 
-A TypeScript library for whole-home manual-j-style heat load calculations.
+A TypeScript library for whole-home manual-j-style heat load calculations for winter heating conditions.
 
 ## Description
 
-This library aims to provide tools and calculations based on ACCA Manual J (8th Edition) principles for determining residential heating and cooling loads.
+This library aims to provide tools and calculations based on ACCA Manual J residential load calculations. Currently supported is winter heating conditions against a whole home. This can be helpful to predict what a house's winter heating cost might be.
+
+This library is based on an older (7th edition) version of the Manual J and is not appropriate for environments where accuracy is critical.
 
 ## Installation
 
@@ -14,20 +16,23 @@ npm install manualj
 
 ## Usage
 
+See [Expected Usage](tests/expectedUsage.test.ts) for a complete example.
+
 ```typescript
-import { calculateRoomHeatLoad } from 'manualj';
+  import { House, Climate } from "manualj";
 
-const livingRoomLoad = calculateRoomHeatLoad("Living Room");
-console.log(livingRoomLoad); // Output: Heat load for Living Room is X BTU/hr.
+  const house = new House();
+  const climate = new Climate();
+
+  climate.state = "ONTARIO";
+  climate.location = "Ottawa AP (S)";
+
+  house.wall.cavityInsulation = "R-19";
+  house.wall.area = 1078;
+
+  const indoorTemperature = 70;
+  console.log(house.calculateHeatLoss(indoorTemperature - climate.winterDesignTemperature));
 ```
-
-## Features (Planned)
-
-*   Calculation of sensible and latent heat gains/losses.
-*   Window, door, wall, roof, and floor load calculations.
-*   Infiltration and ventilation load calculations.
-*   Duct system gain/loss considerations.
-*   Detailed reporting.
 
 ## Contributing
 
@@ -35,4 +40,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE:1) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

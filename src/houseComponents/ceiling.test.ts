@@ -84,7 +84,7 @@ describe("Ceiling", () => {
     const testCeiling = new Ceiling();
     (testCeiling as any)._ceilingType = "invalid";
     (testCeiling as any)._construction = "invalid";
-  
+
     expect(() => testCeiling.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );

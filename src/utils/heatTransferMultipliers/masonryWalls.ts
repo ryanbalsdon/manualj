@@ -86,7 +86,8 @@ export function calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
     uFactorBelowGrade = uFactors.uFactorBasement ?? 0;
   }
 
-  const htmAboveGrade = uFactors.uFactorAboveGrade * feetAboveGrade * tempDifference;
+  const htmAboveGrade =
+    uFactors.uFactorAboveGrade * feetAboveGrade * tempDifference;
   const htmBelowGrade = uFactorBelowGrade * feetBelowGrade * tempDifference;
 
   return htmAboveGrade + htmBelowGrade;

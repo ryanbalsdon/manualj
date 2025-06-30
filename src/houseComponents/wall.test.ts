@@ -77,7 +77,7 @@ describe("Wall", () => {
     const testWall = new Wall();
     (testWall as any)._cavityInsulation = "invalid";
     (testWall as any)._sheathing = "invalid";
-  
+
     expect(() => testWall.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );

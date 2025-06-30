@@ -32,7 +32,7 @@ describe("calculateHeatLoss", () => {
     house.wall.area = 1078;
 
     house.masonryWall.wallType = '8" or 12" Block';
-    house.masonryWall.insulation = 'R-5';
+    house.masonryWall.insulation = "R-5";
     house.masonryWall.feetAboveGrade = 3;
     house.masonryWall.feetBelowGrade = 5;
     house.masonryWall.length = 160;
@@ -52,6 +52,8 @@ describe("calculateHeatLoss", () => {
 
     expect(climate.winterDesignTemperature).toBeCloseTo(-5);
     const temperatureDifference = 70 - climate.winterDesignTemperature;
-    expect(house.calculateHeatLoss(temperatureDifference)).toBeCloseTo(48041.25533);
+    expect(house.calculateHeatLoss(temperatureDifference)).toBeCloseTo(
+      48041.25533,
+    );
   });
 });
