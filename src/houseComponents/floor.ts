@@ -92,7 +92,7 @@ export class Floor {
     return this._insulationRValue;
   }
 
-  calculateHeatLoss(): number {
+  calculateHeatLoss(temperatureDifference: number): number {
     const uFactor = getUFactor(
       this._floorType,
       this._constructionType,
@@ -105,6 +105,6 @@ export class Floor {
       );
     }
 
-    return this.area * uFactor;
+    return this.area * uFactor * temperatureDifference;
   }
 }

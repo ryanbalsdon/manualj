@@ -111,7 +111,7 @@ describe("Window", () => {
 
   it("calculates heat loss correctly", () => {
     window.area = 1;
-    expect(window.calculateHeatLoss()).toBeCloseTo(0.99);
+    expect(window.calculateHeatLoss(20)).toBeCloseTo(19.8);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
@@ -120,9 +120,29 @@ describe("Window", () => {
     (win as any)._windowType = "invalid";
     (win as any)._glassType = "invalid";
     (win as any)._frameType = "invalid";
-
-    expect(() => win.calculateHeatLoss()).toThrow(
+  
+    expect(() => win.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );
+  });
+
+  it("passes some specific examples", () => {
+    window.windowType = "Double Pane Window";
+    window.glassType = "Clear Glass";
+    window.frameType = "Wood Frame";
+    window.area = 60;
+    expect(window.calculateHeatLoss(75)).toBeCloseTo(2479.5);
+
+    window.windowType = "Single Pane Window & Storm";
+    window.glassType = "Clear Glass";
+    window.frameType = "Metal Frame";
+    window.area = 20;
+    expect(window.calculateHeatLoss(75)).toBeCloseTo(975);
+
+    window.windowType = "Single Pane Window & Storm";
+    window.glassType = "Clear Glass";
+    window.frameType = "Wood Frame";
+    window.area = 105;
+    expect(window.calculateHeatLoss(75)).toBeCloseTo(3740.625);
   });
 });

@@ -11,10 +11,10 @@ const buildDoorComponentMap = (() => {
     if (cacheBuilt) return doorCache;
 
     for (const entry of doorData) {
-      let windowMap = doorCache.get(entry.windowType);
+      let windowMap = doorCache.get(entry.doorType);
       if (!windowMap) {
         windowMap = new Map();
-        doorCache.set(entry.windowType, windowMap);
+        doorCache.set(entry.doorType, windowMap);
       }
 
       let glassMap = windowMap.get(entry.glassType);
@@ -33,23 +33,23 @@ const buildDoorComponentMap = (() => {
   };
 })();
 
-export function getWindowTypes(): string[] {
+export function getDoorTypes(): string[] {
   const doorMap = buildDoorComponentMap();
   return Array.from(doorMap.keys());
 }
 
-export function getGlassTypesForWindowType(windowType: string): string[] {
+export function getGlassTypesForDoorType(doorType: string): string[] {
   const doorMap = buildDoorComponentMap();
-  const windowMap = doorMap.get(windowType);
+  const windowMap = doorMap.get(doorType);
   return windowMap ? Array.from(windowMap.keys()) : [];
 }
 
 export function getFrameTypesForWindowAndGlass(
-  windowType: string,
+  doorType: string,
   glassType: string,
 ): string[] {
   const doorMap = buildDoorComponentMap();
-  const windowMap = doorMap.get(windowType);
+  const windowMap = doorMap.get(doorType);
   if (!windowMap) return [];
 
   const glassMap = windowMap.get(glassType);
@@ -57,12 +57,12 @@ export function getFrameTypesForWindowAndGlass(
 }
 
 export function getUFactor(
-  windowType: string,
+  doorType: string,
   glassType: string,
   frameType: string,
 ): number | null {
   const doorMap = buildDoorComponentMap();
-  const windowMap = doorMap.get(windowType);
+  const windowMap = doorMap.get(doorType);
   if (!windowMap) return null;
 
   const glassMap = windowMap.get(glassType);
@@ -73,12 +73,12 @@ export function getUFactor(
 }
 
 export function calculateHeatTransferMultiplier(
-  windowType: string,
+  doorType: string,
   glassType: string,
   frameType: string,
   tempDifference: number,
 ): number | null {
-  const uFactor = getUFactor(windowType, glassType, frameType);
+  const uFactor = getUFactor(doorType, glassType, frameType);
   if (uFactor === null) return null;
   return uFactor * tempDifference;
 }

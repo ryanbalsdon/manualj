@@ -2,7 +2,7 @@ import {
   getMasonryWallTypes,
   getInsulationTypesForMasonryWallType,
   getUFactorsForMasonryWall,
-  calculateMasonryWallHeatTransferMultiplier,
+  calculateMasonryWallHeatTransferMultiplierPerLinearFoot,
 } from "./masonryWalls";
 
 describe("Masonry Wall Heat Transfer Utilities", () => {
@@ -44,96 +44,103 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
 
   describe("calculateMasonryWallHeatTransferMultiplier", () => {
     test("calculates correctly for above grade only (feetBelowGrade <= 2)", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '8" or 12" Block',
         "None",
-        20,
         10,
         1,
+        70
       );
-      // (0.510 * 10 + 0.510 * 1) / 11 * 20 = 0.510 * 20 = 10.2
-      expect(multiplier).toBeCloseTo(10.2);
+      expect(multiplier).toBeCloseTo(392.7);
     });
 
     test("calculates correctly for crawlspace (feetBelowGrade 2-5)", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '8" or 12" Block',
         "None",
-        20,
         5,
         3,
+        70
       );
-      // (0.510 * 5 + 0.125 * 3) / 8 * 20 = (2.55 + 0.375) / 8 * 20 = 2.925 / 8 * 20 = 0.365625 * 20 = 7.3125
-      expect(multiplier).toBeCloseTo(7.3125);
+      expect(multiplier).toBeCloseTo(204.75);
     });
 
     test("calculates correctly for basement (feetBelowGrade > 5)", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '8" or 12" Block',
         "None",
-        20,
         5,
         6,
+        70
       );
-      // (0.510 * 5 + 0.087 * 6) / 11 * 20 = (2.55 + 0.522) / 11 * 20 = 3.072 / 11 * 20 = 0.2792727 * 20 = 5.585454
-      expect(multiplier).toBeCloseTo(5.585454);
+      expect(multiplier).toBeCloseTo(215.04);
     });
 
     test("returns null for invalid wall type", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         "InvalidWall",
         "None",
-        20,
         10,
         0,
+        70
       );
       expect(multiplier).toBeNull();
     });
 
     test("returns null for invalid insulation type", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '8" or 12" Block',
         "Invalid",
-        20,
         10,
         0,
+        70
       );
       expect(multiplier).toBeNull();
     });
 
     test("returns 0 if totalFeet is 0", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '8" or 12" Block',
         "None",
-        20,
         0,
         0,
+        70
       );
       expect(multiplier).toBe(0);
     });
 
     test("calculates correctly when uFactorCrawlspace is null for '4\" Brick + 8\" Block' and feetBelowGrade 2-5", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '4" Brick + 8" Block',
         "None",
-        20,
         5,
         3,
+        70
       );
-      // (0.400 * 5 + 0 * 3) / 8 * 20 = 2 / 8 * 20 = 0.25 * 20 = 5
-      expect(multiplier).toBeCloseTo(5);
+      expect(multiplier).toBeCloseTo(140);
     });
 
     test("calculates correctly when uFactorBasement is null for '4\" Brick + 8\" Block' and feetBelowGrade > 5", () => {
-      const multiplier = calculateMasonryWallHeatTransferMultiplier(
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
         '4" Brick + 8" Block',
         "None",
-        20,
         5,
         6,
+        70
       );
-      // (0.400 * 5 + 0 * 6) / 11 * 20 = 2 / 11 * 20 = 0.181818 * 20 = 3.63636
-      expect(multiplier).toBeCloseTo(3.63636);
+      expect(multiplier).toBeCloseTo(140);
+    });
+
+    test("passes a specific example", () => {
+      const multiplier = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
+        '8" or 12" Block',
+        "R-5",
+        3,
+        5,
+        75
+      );
+ 
+      expect(multiplier).toBeCloseTo(60.15);
     });
   });
 });

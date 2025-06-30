@@ -59,7 +59,7 @@ export class Ceiling {
     return this._construction;
   }
 
-  calculateHeatLoss(): number {
+  calculateHeatLoss(temperatureDifference: number): number {
     const uFactor = getUFactor(this._ceilingType, this._construction);
 
     if (uFactor === null) {
@@ -68,6 +68,6 @@ export class Ceiling {
       );
     }
 
-    return this.area * uFactor;
+    return this.area * uFactor * temperatureDifference;
   }
 }

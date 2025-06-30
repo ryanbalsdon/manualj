@@ -65,12 +65,12 @@ export function getUFactorsForMasonryWall(
   return uFactorData || null;
 }
 
-export function calculateMasonryWallHeatTransferMultiplier(
+export function calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
   wallType: string,
   insulation: string,
-  tempDifference: number,
   feetAboveGrade: number,
   feetBelowGrade: number,
+  tempDifference: number,
 ): number | null {
   const uFactors = getUFactorsForMasonryWall(wallType, insulation);
   if (!uFactors) return null;
@@ -86,13 +86,8 @@ export function calculateMasonryWallHeatTransferMultiplier(
     uFactorBelowGrade = uFactors.uFactorBasement ?? 0;
   }
 
-  const totalFeet = feetAboveGrade + feetBelowGrade;
-  if (totalFeet === 0) return 0; // Avoid division by zero
+  const htmAboveGrade = uFactors.uFactorAboveGrade * feetAboveGrade * tempDifference;
+  const htmBelowGrade = uFactorBelowGrade * feetBelowGrade * tempDifference;
 
-  const weightedUFactor =
-    (uFactors.uFactorAboveGrade * feetAboveGrade +
-      uFactorBelowGrade * feetBelowGrade) /
-    totalFeet;
-
-  return weightedUFactor * tempDifference;
+  return htmAboveGrade + htmBelowGrade;
 }

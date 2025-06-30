@@ -1,6 +1,6 @@
 import {
-  getWindowTypes as getDoorTypes,
-  getGlassTypesForWindowType,
+  getDoorTypes as getDoorTypes,
+  getGlassTypesForDoorType,
   getFrameTypesForWindowAndGlass,
   getUFactor,
 } from "@/utils/heatTransferMultipliers/doors";
@@ -15,7 +15,7 @@ export class Door {
     const doorTypes = getDoorTypes();
     this._doorType = doorTypes[0];
 
-    const glassTypes = getGlassTypesForWindowType(this._doorType);
+    const glassTypes = getGlassTypesForDoorType(this._doorType);
     this._glassType = glassTypes[0];
 
     const frameTypes = getFrameTypesForWindowAndGlass(
@@ -48,7 +48,7 @@ export class Door {
   }
 
   get validGlassTypes(): string[] {
-    return getGlassTypesForWindowType(this._doorType);
+    return getGlassTypesForDoorType(this._doorType);
   }
 
   set glassType(value: string) {
@@ -83,7 +83,7 @@ export class Door {
     return this._frameType;
   }
 
-  calculateHeatLoss(): number {
+  calculateHeatLoss(temperatureDifference: number): number {
     const uFactor = getUFactor(
       this._doorType,
       this._glassType,
@@ -96,6 +96,6 @@ export class Door {
       );
     }
 
-    return this.area * uFactor;
+    return this.area * uFactor * temperatureDifference;
   }
 }

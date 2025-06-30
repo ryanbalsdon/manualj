@@ -112,7 +112,7 @@ describe("Door", () => {
 
   it("calculates heat loss correctly", () => {
     door.area = 1;
-    expect(door.calculateHeatLoss()).toBeCloseTo(0.99);
+    expect(door.calculateHeatLoss(20)).toBeCloseTo(19.8);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
@@ -121,9 +121,17 @@ describe("Door", () => {
     (testDoor as any)._doorType = "invalid";
     (testDoor as any)._glassType = "invalid";
     (testDoor as any)._frameType = "invalid";
-
-    expect(() => testDoor.calculateHeatLoss()).toThrow(
+  
+    expect(() => testDoor.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );
+  });
+
+  it("passes some specific examples", () => {
+    door.doorType = "Metal Doors";
+    door.glassType = "N/A";
+    door.frameType = "Urethane Core";
+    door.area = 37;
+    expect(door.calculateHeatLoss(75)).toBeCloseTo(527.25);
   });
 });

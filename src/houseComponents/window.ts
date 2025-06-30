@@ -94,7 +94,7 @@ export class Window {
     return this._frameType;
   }
 
-  calculateHeatLoss(): number {
+  calculateHeatLoss(temperatureDifference: number): number {
     const uFactor = getUFactorForWindow(
       this._windowType,
       this._glassType,
@@ -107,6 +107,6 @@ export class Window {
       );
     }
 
-    return this.area * uFactor;
+    return this.area * uFactor * temperatureDifference;
   }
 }

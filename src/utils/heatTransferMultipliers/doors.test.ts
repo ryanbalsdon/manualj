@@ -1,6 +1,6 @@
 import {
-  getWindowTypes,
-  getGlassTypesForWindowType,
+  getDoorTypes,
+  getGlassTypesForDoorType,
   getFrameTypesForWindowAndGlass,
   getUFactor,
   calculateHeatTransferMultiplier,
@@ -8,7 +8,7 @@ import {
 
 describe("Door Heat Transfer Utilities", () => {
   test("getWindowTypes returns all window types", () => {
-    const windowTypes = getWindowTypes();
+    const windowTypes = getDoorTypes();
     expect(windowTypes).toEqual([
       "Sliding Glass Doors",
       "French Doors",
@@ -18,7 +18,7 @@ describe("Door Heat Transfer Utilities", () => {
   });
 
   test("getGlassTypesForWindowType returns glass types for Sliding Glass Doors", () => {
-    const glassTypes = getGlassTypesForWindowType("Sliding Glass Doors");
+    const glassTypes = getGlassTypesForDoorType("Sliding Glass Doors");
     expect(glassTypes).toEqual([
       "Single Pane, Clear Glass",
       'Single Pane, Low "e" Glass',
@@ -32,7 +32,7 @@ describe("Door Heat Transfer Utilities", () => {
   });
 
   test("getGlassTypesForWindowType returns empty array for invalid window type", () => {
-    const glassTypes = getGlassTypesForWindowType("InvalidWindowType");
+    const glassTypes = getGlassTypesForDoorType("InvalidWindowType");
     expect(glassTypes).toEqual([]);
   });
 

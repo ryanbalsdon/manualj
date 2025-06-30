@@ -69,7 +69,7 @@ describe("Wall", () => {
 
   it("calculates heat loss correctly", () => {
     wall.area = 1;
-    expect(wall.calculateHeatLoss()).toBeCloseTo(0.271);
+    expect(wall.calculateHeatLoss(20)).toBeCloseTo(5.42);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
@@ -77,9 +77,16 @@ describe("Wall", () => {
     const testWall = new Wall();
     (testWall as any)._cavityInsulation = "invalid";
     (testWall as any)._sheathing = "invalid";
-
-    expect(() => testWall.calculateHeatLoss()).toThrow(
+  
+    expect(() => testWall.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );
+  });
+
+  it("passes some specific examples", () => {
+    wall.cavityInsulation = "R-11";
+    wall.sheathing = '½" Asphalt Brd (R-1.3)';
+    wall.area = 1078;
+    expect(wall.calculateHeatLoss(75)).toBeCloseTo(6468);
   });
 });

@@ -1,7 +1,7 @@
     import {
       getMasonryWallTypes,
       getInsulationTypesForMasonryWallType,
-      calculateMasonryWallHeatTransferMultiplier,
+      calculateMasonryWallHeatTransferMultiplierPerLinearFoot,
     } from "@/utils/heatTransferMultipliers/masonryWalls";
 
     export class MasonryWall {
@@ -63,13 +63,13 @@
         return this._insulation;
       }
 
-      calculateHeatLoss(tempDifference: number): number | null {
-        const heatTransferPerLinearFoot = calculateMasonryWallHeatTransferMultiplier(
+      calculateHeatLoss(temperatureDifference: number): number {
+        const heatTransferPerLinearFoot = calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
           this._wallType,
           this._insulation,
-          tempDifference,
           this.feetAboveGrade,
           this.feetBelowGrade,
+          temperatureDifference
         );
 
         if (heatTransferPerLinearFoot === null) {

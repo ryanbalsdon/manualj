@@ -77,16 +77,23 @@ describe("Ceiling", () => {
 
   it("calculates heat loss correctly", () => {
     ceiling.area = 1;
-    expect(ceiling.calculateHeatLoss()).toBeCloseTo(0.599);
+    expect(ceiling.calculateHeatLoss(20)).toBeCloseTo(11.98);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
     const testCeiling = new Ceiling();
     (testCeiling as any)._ceilingType = "invalid";
     (testCeiling as any)._construction = "invalid";
-
-    expect(() => testCeiling.calculateHeatLoss()).toThrow(
+  
+    expect(() => testCeiling.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );
+  });
+
+  it("passes some specific examples", () => {
+    ceiling.ceilingType = "Ventilated Attic";
+    ceiling.construction = "R-19 Insulation";
+    ceiling.area = 1479;
+    expect(ceiling.calculateHeatLoss(75)).toBeCloseTo(5879.025);
   });
 });

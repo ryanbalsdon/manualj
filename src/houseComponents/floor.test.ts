@@ -105,7 +105,7 @@ describe("Floor", () => {
 
   it("calculates heat loss correctly", () => {
     floor.area = 1;
-    expect(floor.calculateHeatLoss()).toBeCloseTo(0.312);
+    expect(floor.calculateHeatLoss(20)).toBeCloseTo(6.24);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
@@ -113,9 +113,17 @@ describe("Floor", () => {
     (testFloor as any)._floorType = "invalid";
     (testFloor as any)._constructionType = "invalid";
     (testFloor as any)._insulationRValue = "invalid";
-
-    expect(() => testFloor.calculateHeatLoss()).toThrow(
+  
+    expect(() => testFloor.calculateHeatLoss(20)).toThrow(
       "Could not find U-Factor for combination",
     );
+  });
+
+  it("passes some specific examples", () => {
+    floor.floorType = "Basement Floors";
+    floor.constructionType = "Below Grade";
+    floor.insulationRValue = "N/A";
+    floor.area = 1479;
+    expect(floor.calculateHeatLoss(75)).toBeCloseTo(2662.20);
   });
 });

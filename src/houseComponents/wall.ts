@@ -61,7 +61,7 @@ export class Wall {
     return this._sheathing;
   }
 
-  calculateHeatLoss(): number {
+  calculateHeatLoss(temperatureDifference: number): number {
     const uFactor = getUFactorForWall(this._cavityInsulation, this._sheathing);
 
     if (uFactor === null) {
@@ -70,6 +70,6 @@ export class Wall {
       );
     }
 
-    return this.area * uFactor;
+    return this.area * uFactor * temperatureDifference;
   }
 }

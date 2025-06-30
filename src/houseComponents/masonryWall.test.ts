@@ -78,7 +78,7 @@ describe("MasonryWall", () => {
     masonryWall.feetBelowGrade = 7;
     const tempDifference = 25;
 
-    expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(42.25);
+    expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(422.5);
   });
 
   it("calculates heat loss correctly for '4\" Brick + 8\" Block' with 'None' insulation", () => {
@@ -89,7 +89,7 @@ describe("MasonryWall", () => {
     masonryWall.feetBelowGrade = 0; // No below grade
     const tempDifference = 30;
 
-    expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(180);
+    expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(900);
   });
 
   it("returns 0 heat loss if length is 0", () => {
@@ -137,5 +137,14 @@ describe("MasonryWall", () => {
     expect(() => masonryWall.calculateHeatLoss(tempDifference)).toThrow(
       "Could not find heat transfer multiplier for combination: invalid, invalid, 3ft above grade, 7ft below grade",
     );
+  });
+
+  it("passes some specific examples", () => {
+    masonryWall.wallType = '8" or 12" Block';
+    masonryWall.insulation = 'R-5';
+    masonryWall.feetAboveGrade = 3;
+    masonryWall.feetBelowGrade = 5;
+    masonryWall.length = 160;
+    expect(masonryWall.calculateHeatLoss(75)).toBeCloseTo(9624);
   });
 });
