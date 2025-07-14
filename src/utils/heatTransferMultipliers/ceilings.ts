@@ -1,50 +1,54 @@
 import { ceilingHeatTransferMultipliers as ceilingData } from "@/data/heatTransferMultipliers/ceilings";
+import { interpolateHeatTransferMultiplier } from "./interpolationUtils";
+import { createMemoizedMapBuilder } from "./mapBuilder";
+import { createHeatTransferRepository } from "./repositoryFactory";
 
-const buildCeilingComponentMap = (() => {
-  let cacheBuilt = false;
-  const ceilingCache = new Map<string, Map<string, { uFactor: number }>>();
+// Define the specific data structure for a ceiling entry
+type CeilingEntryData = {
+  uFactor: number;
+  htmByTemperature: { [key: number]: number };
+}
 
-  return () => {
-    if (cacheBuilt) return ceilingCache;
+// Define key extractors for the ceiling data structure
+const ceilingKeyExtractors: [
+  (entry: typeof ceilingData[0]) => string,
+  (entry: typeof ceilingData[0]) => string,
+  (entry: typeof ceilingData[0]) => CeilingEntryData
+] = [
+  (entry) => entry.ceilingType,
+  (entry) => entry.construction,
+  (entry) => ({
+    uFactor: entry.uFactor,
+    htmByTemperature: entry.htmByTemperature,
+  }),
+];
 
-    for (const entry of ceilingData) {
-      let constructionMap = ceilingCache.get(entry.ceilingType);
-      if (!constructionMap) {
-        constructionMap = new Map();
-        ceilingCache.set(entry.ceilingType, constructionMap);
-      }
+// Create the memoized map builder for ceilings
+const buildCeilingMap = createMemoizedMapBuilder<
+  typeof ceilingData[0],
+  [string, string], // Keys: ceilingType, construction
+  CeilingEntryData
+>(ceilingData, ceilingKeyExtractors);
 
-      constructionMap.set(entry.construction, {
-        uFactor: entry.uFactor,
-      });
-    }
-
-    cacheBuilt = true;
-    return ceilingCache;
-  };
-})();
+// Create the ceiling data repository
+const ceilingRepository = createHeatTransferRepository<
+  [string, string],
+  CeilingEntryData
+>(buildCeilingMap, ["ceilingType", "construction"]);
 
 export function getCeilingTypes(): string[] {
-  const ceilingMap = buildCeilingComponentMap();
-  return Array.from(ceilingMap.keys());
+  return ceilingRepository.getAvailableOptions();
 }
 
 export function getConstructionsForCeilingType(ceilingType: string): string[] {
-  const ceilingMap = buildCeilingComponentMap();
-  const constructionMap = ceilingMap.get(ceilingType);
-  return constructionMap ? Array.from(constructionMap.keys()) : [];
+  return ceilingRepository.getAvailableOptions(ceilingType);
 }
 
-export function getUFactor(
+export function getCeilingData(
   ceilingType: string,
   construction: string,
-): number | null {
-  const ceilingMap = buildCeilingComponentMap();
-  const constructionMap = ceilingMap.get(ceilingType);
-  if (!constructionMap) return null;
-
-  const uFactorData = constructionMap.get(construction);
-  return uFactorData ? uFactorData.uFactor : null;
+): CeilingEntryData | null {
+  return ceilingRepository.getData(ceilingType, construction);
 }
 
 export function calculateHeatTransferMultiplier(
@@ -52,7 +56,12 @@ export function calculateHeatTransferMultiplier(
   construction: string,
   tempDifference: number,
 ): number | null {
-  const uFactor = getUFactor(ceilingType, construction);
-  if (uFactor === null) return null;
-  return uFactor * tempDifference;
+  const data = ceilingRepository.getData(ceilingType, construction);
+  if (!data) return null;
+
+  return interpolateHeatTransferMultiplier(
+    data.htmByTemperature,
+    tempDifference,
+    data.uFactor,
+  );
 }

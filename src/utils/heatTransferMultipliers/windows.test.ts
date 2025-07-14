@@ -2,8 +2,8 @@ import {
   getWindowTypes,
   getGlassTypesForWindowType,
   getFrameTypesForWindowAndGlass,
-  getUFactorForWindow,
   calculateWindowHeatTransferMultiplier,
+  getWindowData,
 } from "./windows";
 
 describe("Window Heat Transfer Utilities", () => {
@@ -59,40 +59,40 @@ describe("Window Heat Transfer Utilities", () => {
     expect(frameTypes).toEqual([]);
   });
 
-  test("getUFactorForWindow returns correct U-factor for known combination", () => {
-    const uFactor = getUFactorForWindow(
+  test("getWindowData returns correct U-factor for known combination", () => {
+    const windowData = getWindowData(
       "Single Pane Window",
       "Clear Glass",
       "Wood Frame",
     );
-    expect(uFactor).toBe(0.99);
+    expect(windowData?.uFactor).toBe(0.99);
   });
 
-  test("getUFactorForWindow returns null for invalid window type", () => {
-    const uFactor = getUFactorForWindow(
+  test("getWindowData returns null for invalid window type", () => {
+    const windowData = getWindowData(
       "InvalidWindow",
       "Clear Glass",
       "Wood Frame",
     );
-    expect(uFactor).toBeNull();
+    expect(windowData).toBeNull();
   });
 
-  test("getUFactorForWindow returns null for invalid glass type", () => {
-    const uFactor = getUFactorForWindow(
+  test("getWindowData returns null for invalid glass type", () => {
+    const windowData = getWindowData(
       "Single Pane Window",
       "InvalidGlass",
       "Wood Frame",
     );
-    expect(uFactor).toBeNull();
+    expect(windowData).toBeNull();
   });
 
-  test("getUFactorForWindow returns null for invalid frame type", () => {
-    const uFactor = getUFactorForWindow(
+  test("getWindowData returns null for invalid frame type", () => {
+    const windowData = getWindowData(
       "Single Pane Window",
       "Clear Glass",
       "InvalidFrame",
     );
-    expect(uFactor).toBeNull();
+    expect(windowData).toBeNull();
   });
 
   test("calculateWindowHeatTransferMultiplier calculates correctly", () => {

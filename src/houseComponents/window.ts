@@ -1,8 +1,8 @@
 import {
-  getUFactorForWindow,
   getWindowTypes,
   getGlassTypesForWindowType,
   getFrameTypesForWindowAndGlass,
+  calculateWindowHeatTransferMultiplier,
 } from "@/utils/heatTransferMultipliers/windows";
 
 export class Window {
@@ -95,18 +95,19 @@ export class Window {
   }
 
   calculateHeatLoss(temperatureDifference: number): number {
-    const uFactor = getUFactorForWindow(
+    const heatTransferMultiplier = calculateWindowHeatTransferMultiplier(
       this._windowType,
       this._glassType,
       this._frameType,
+      temperatureDifference,
     );
 
-    if (uFactor === null) {
+    if (heatTransferMultiplier === null) {
       throw new Error(
-        `Could not find U-Factor for combination: ${this._windowType}, ${this._glassType}, ${this._frameType}`,
+        `Could not calculate heat transfer multiplier for combination: ${this._windowType}, ${this._glassType}, ${this._frameType}`,
       );
     }
 
-    return this.area * uFactor * temperatureDifference;
+    return this.area * heatTransferMultiplier;
   }
 }

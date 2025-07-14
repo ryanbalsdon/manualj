@@ -2,12 +2,12 @@ import { wallHeatTransferMultipliers } from "./walls";
 
 describe.each(wallHeatTransferMultipliers)(
   "for wall with cavity insulation: $cavityInsulation and sheathing: $sheathing",
-  ({ cavityInsulation, sheathing, uFactor, htmByTemperature }) => {
+  ({ uFactor, htmByTemperature }) => {
     const testCases = Object.entries(htmByTemperature).map(
       ([temperature, htm]) => ({
         temperature: parseInt(temperature, 10),
         htm,
-      })
+      }),
     );
 
     it.each(testCases)(
@@ -18,7 +18,7 @@ describe.each(wallHeatTransferMultipliers)(
         const upperBound = expectedHtm * 1.07;
         expect(htm).toBeGreaterThanOrEqual(lowerBound);
         expect(htm).toBeLessThanOrEqual(upperBound);
-      }
+      },
     );
-  }
+  },
 );

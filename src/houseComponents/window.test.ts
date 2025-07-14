@@ -122,7 +122,7 @@ describe("Window", () => {
     (win as any)._frameType = "invalid";
 
     expect(() => win.calculateHeatLoss(20)).toThrow(
-      "Could not find U-Factor for combination",
+      "Could not calculate heat transfer multiplier for combination: invalid, invalid, invalid",
     );
   });
 
@@ -131,18 +131,18 @@ describe("Window", () => {
     window.glassType = "Clear Glass";
     window.frameType = "Wood Frame";
     window.area = 60;
-    expect(window.calculateHeatLoss(75)).toBeCloseTo(2479.5);
+    expect(window.calculateHeatLoss(75)).toBeCloseTo(2478);
 
     window.windowType = "Single Pane Window & Storm";
     window.glassType = "Clear Glass";
     window.frameType = "Metal Frame";
     window.area = 20;
-    expect(window.calculateHeatLoss(75)).toBeCloseTo(975);
+    expect(window.calculateHeatLoss(75)).toBeCloseTo(976);
 
     window.windowType = "Single Pane Window & Storm";
     window.glassType = "Clear Glass";
     window.frameType = "Wood Frame";
     window.area = 105;
-    expect(window.calculateHeatLoss(75)).toBeCloseTo(3740.625);
+    expect(window.calculateHeatLoss(75)).toBeCloseTo(3738);
   });
 });

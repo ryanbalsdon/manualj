@@ -1,10 +1,18 @@
+import { interpolateHeatTransferMultiplier } from "./interpolationUtils";
+
 import { doorHeatTransferMultipliers as doorData } from "@/data/heatTransferMultipliers/doors";
 
 const buildDoorComponentMap = (() => {
   let cacheBuilt = false;
   const doorCache = new Map<
     string,
-    Map<string, Map<string, { uFactor: number }>>
+    Map<
+      string,
+      Map<
+        string,
+        { uFactor: number; htmByTemperature: { [key: number]: number } }
+      >
+    >
   >();
 
   return () => {
@@ -25,6 +33,7 @@ const buildDoorComponentMap = (() => {
 
       glassMap.set(entry.frameType, {
         uFactor: entry.uFactor,
+        htmByTemperature: entry.htmByTemperature,
       });
     }
 
@@ -56,11 +65,11 @@ export function getFrameTypesForWindowAndGlass(
   return glassMap ? Array.from(glassMap.keys()) : [];
 }
 
-export function getUFactor(
+export function getDoorData(
   doorType: string,
   glassType: string,
   frameType: string,
-): number | null {
+): { uFactor: number; htmByTemperature: { [key: number]: number } } | null {
   const doorMap = buildDoorComponentMap();
   const windowMap = doorMap.get(doorType);
   if (!windowMap) return null;
@@ -68,8 +77,8 @@ export function getUFactor(
   const glassMap = windowMap.get(glassType);
   if (!glassMap) return null;
 
-  const frameData = glassMap.get(frameType);
-  return frameData ? frameData.uFactor : null;
+  const doorData = glassMap.get(frameType);
+  return doorData || null;
 }
 
 export function calculateHeatTransferMultiplier(
@@ -78,7 +87,13 @@ export function calculateHeatTransferMultiplier(
   frameType: string,
   tempDifference: number,
 ): number | null {
-  const uFactor = getUFactor(doorType, glassType, frameType);
-  if (uFactor === null) return null;
-  return uFactor * tempDifference;
+  const doorData = getDoorData(doorType, glassType, frameType);
+  if (doorData === null) return null;
+
+  const { uFactor, htmByTemperature } = doorData;
+  return interpolateHeatTransferMultiplier(
+    htmByTemperature,
+    tempDifference,
+    uFactor,
+  );
 }

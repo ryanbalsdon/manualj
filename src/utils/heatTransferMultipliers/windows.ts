@@ -1,10 +1,18 @@
+import { interpolateHeatTransferMultiplier } from "./interpolationUtils";
+
 import { windowHeatTransferMultipliers as windowData } from "@/data/heatTransferMultipliers/windows";
 
 const buildWindowComponentMap = (() => {
   let cacheBuilt = false;
   const windowCache = new Map<
     string,
-    Map<string, Map<string, { uFactor: number }>>
+    Map<
+      string,
+      Map<
+        string,
+        { uFactor: number; htmByTemperature: { [key: number]: number } }
+      >
+    >
   >();
 
   return () => {
@@ -25,6 +33,7 @@ const buildWindowComponentMap = (() => {
 
       frameMap.set(entry.frameType, {
         uFactor: entry.uFactor,
+        htmByTemperature: entry.htmByTemperature,
       });
     }
 
@@ -56,11 +65,11 @@ export function getFrameTypesForWindowAndGlass(
   return frameMap ? Array.from(frameMap.keys()) : [];
 }
 
-export function getUFactorForWindow(
+export function getWindowData(
   windowType: string,
   glassType: string,
   frameType: string,
-): number | null {
+): { uFactor: number; htmByTemperature: { [key: number]: number } } | null {
   const windowMap = buildWindowComponentMap();
   const glassMap = windowMap.get(windowType);
   if (!glassMap) return null;
@@ -68,8 +77,8 @@ export function getUFactorForWindow(
   const frameMap = glassMap.get(glassType);
   if (!frameMap) return null;
 
-  const frameData = frameMap.get(frameType);
-  return frameData ? frameData.uFactor : null;
+  const windowData = frameMap.get(frameType);
+  return windowData || null;
 }
 
 export function calculateWindowHeatTransferMultiplier(
@@ -78,7 +87,13 @@ export function calculateWindowHeatTransferMultiplier(
   frameType: string,
   tempDifference: number,
 ): number | null {
-  const uFactor = getUFactorForWindow(windowType, glassType, frameType);
-  if (uFactor === null) return null;
-  return uFactor * tempDifference;
+  const windowData = getWindowData(windowType, glassType, frameType);
+  if (windowData === null) return null;
+
+  const { uFactor, htmByTemperature } = windowData;
+  return interpolateHeatTransferMultiplier(
+    htmByTemperature,
+    tempDifference,
+    uFactor,
+  );
 }

@@ -123,7 +123,7 @@ describe("Door", () => {
     (testDoor as any)._frameType = "invalid";
 
     expect(() => testDoor.calculateHeatLoss(20)).toThrow(
-      "Could not find U-Factor for combination",
+      "Could not calculate heat transfer multiplier for combination: invalid, invalid, invalid",
     );
   });
 
@@ -132,6 +132,6 @@ describe("Door", () => {
     door.glassType = "N/A";
     door.frameType = "Urethane Core";
     door.area = 37;
-    expect(door.calculateHeatLoss(75)).toBeCloseTo(527.25);
+    expect(door.calculateHeatLoss(75)).toBeCloseTo(529.1);
   });
 });

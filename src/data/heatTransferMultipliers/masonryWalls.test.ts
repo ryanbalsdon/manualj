@@ -16,7 +16,7 @@ describe.each(masonryWallHeatTransferMultipliers)(
           ([temperature, htm]) => ({
             temperature: parseInt(temperature, 10),
             htm,
-          })
+          }),
         );
 
         it.each(testCases)(
@@ -27,7 +27,7 @@ describe.each(masonryWallHeatTransferMultipliers)(
             const upperBound = expectedHtm * 1.05;
             expect(htm).toBeGreaterThanOrEqual(lowerBound);
             expect(htm).toBeLessThanOrEqual(upperBound);
-          }
+          },
         );
       });
     }
@@ -38,7 +38,7 @@ describe.each(masonryWallHeatTransferMultipliers)(
           ([temperature, htm]) => ({
             temperature: parseInt(temperature, 10),
             htm,
-          })
+          }),
         );
 
         it.each(testCases)(
@@ -49,7 +49,7 @@ describe.each(masonryWallHeatTransferMultipliers)(
             const upperBound = expectedHtm * 1.1;
             expect(htm).toBeGreaterThanOrEqual(lowerBound);
             expect(htm).toBeLessThanOrEqual(upperBound);
-          }
+          },
         );
       });
     }
@@ -60,7 +60,7 @@ describe.each(masonryWallHeatTransferMultipliers)(
           ([temperature, htm]) => ({
             temperature: parseInt(temperature, 10),
             htm,
-          })
+          }),
         );
 
         it.each(testCases)(
@@ -71,9 +71,9 @@ describe.each(masonryWallHeatTransferMultipliers)(
             const upperBound = expectedHtm * 1.05;
             expect(htm).toBeGreaterThanOrEqual(lowerBound);
             expect(htm).toBeLessThanOrEqual(upperBound);
-          }
+          },
         );
       });
     }
-  }
+  },
 );

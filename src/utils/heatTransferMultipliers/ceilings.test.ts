@@ -1,7 +1,7 @@
 import {
   getCeilingTypes,
   getConstructionsForCeilingType,
-  getUFactor,
+  getCeilingData,
   calculateHeatTransferMultiplier,
 } from "./ceilings";
 
@@ -37,28 +37,51 @@ describe("Ceiling Heat Transfer Utilities", () => {
     expect(constructions).toEqual([]);
   });
 
-  test("getUFactor returns correct U-factor for known combination", () => {
-    const uFactor = getUFactor("Ventilated Attic", "No Insulation");
-    expect(uFactor).toBe(0.599);
+  test("getCeilingData returns correct U-factor and htmByTemperature for known combination", () => {
+    const ceilingData = getCeilingData("Ventilated Attic", "No Insulation");
+    expect(ceilingData?.uFactor).toBe(0.599);
+    expect(ceilingData?.htmByTemperature).toBeDefined();
+    expect(ceilingData?.htmByTemperature[20]).toBe(12.0);
   });
 
-  test("getUFactor returns null for invalid ceiling type", () => {
-    const uFactor = getUFactor("InvalidCeiling", "No Insulation");
-    expect(uFactor).toBeNull();
+  test("getCeilingData returns null for invalid ceiling type", () => {
+    const ceilingData = getCeilingData("InvalidCeiling", "No Insulation");
+    expect(ceilingData).toBeNull();
   });
 
-  test("getUFactor returns null for invalid construction", () => {
-    const uFactor = getUFactor("Ventilated Attic", "InvalidConstruction");
-    expect(uFactor).toBeNull();
+  test("getCeilingData returns null for invalid construction", () => {
+    const ceilingData = getCeilingData(
+      "Ventilated Attic",
+      "InvalidConstruction",
+    );
+    expect(ceilingData).toBeNull();
   });
 
-  test("calculateHeatTransferMultiplier calculates correctly", () => {
+  test("calculateHeatTransferMultiplier interpolates correctly within range", () => {
     const multiplier = calculateHeatTransferMultiplier(
       "Ventilated Attic",
       "No Insulation",
-      15,
+      22.5, // Between 20 (12.0) and 25 (15.0)
     );
-    expect(multiplier).toBe(8.985); // 0.599 * 15
+    expect(multiplier).toBeCloseTo(13.5);
+  });
+
+  test("calculateHeatTransferMultiplier falls back to uFactor for out-of-range tempDifference (below min)", () => {
+    const multiplier = calculateHeatTransferMultiplier(
+      "Ventilated Attic",
+      "No Insulation",
+      10, // Below minTemp of 20
+    );
+    expect(multiplier).toBeCloseTo(5.99);
+  });
+
+  test("calculateHeatTransferMultiplier falls back to uFactor for out-of-range tempDifference (above max)", () => {
+    const multiplier = calculateHeatTransferMultiplier(
+      "Ventilated Attic",
+      "No Insulation",
+      100, // Above maxTemp of 95
+    );
+    expect(multiplier).toBeCloseTo(59.9);
   });
 
   test("calculateHeatTransferMultiplier returns null for invalid ceiling type", () => {

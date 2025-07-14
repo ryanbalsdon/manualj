@@ -70,7 +70,7 @@ describe("MasonryWall", () => {
     masonryWall.feetBelowGrade = 7;
     const tempDifference = 25;
 
-    expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(422.5);
+    expect(masonryWall.calculateHeatLoss(tempDifference)).toBeCloseTo(426);
   });
 
   it("calculates heat loss correctly for '4\" Brick + 8\" Block' with 'None' insulation", () => {
@@ -136,6 +136,6 @@ describe("MasonryWall", () => {
     masonryWall.feetAboveGrade = 3;
     masonryWall.feetBelowGrade = 5;
     masonryWall.length = 160;
-    expect(masonryWall.calculateHeatLoss(75)).toBeCloseTo(9624);
+    expect(masonryWall.calculateHeatLoss(75)).toBeCloseTo(9584);
   });
 });

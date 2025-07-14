@@ -1,5 +1,5 @@
 import {
-  getUFactorForWall,
+  calculateWallHeatTransferMultiplier,
   getCavityInsulationTypes,
   getSheathingTypesForCavityInsulation,
 } from "@/utils/heatTransferMultipliers/walls";
@@ -62,14 +62,18 @@ export class Wall {
   }
 
   calculateHeatLoss(temperatureDifference: number): number {
-    const uFactor = getUFactorForWall(this._cavityInsulation, this._sheathing);
+    const htm = calculateWallHeatTransferMultiplier(
+      this._cavityInsulation,
+      this._sheathing,
+      temperatureDifference,
+    );
 
-    if (uFactor === null) {
+    if (htm === null) {
       throw new Error(
         `Could not find U-Factor for combination: ${this._cavityInsulation}, ${this._sheathing}`,
       );
     }
 
-    return this.area * uFactor * temperatureDifference;
+    return this.area * htm;
   }
 }

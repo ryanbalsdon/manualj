@@ -53,7 +53,7 @@ describe("calculateHeatLoss", () => {
     expect(climate.winterDesignTemperature).toBeCloseTo(-5);
     const temperatureDifference = 70 - climate.winterDesignTemperature;
     expect(house.calculateHeatLoss(temperatureDifference)).toBeCloseTo(
-      48041.25533,
+      48035.730325,
     );
   });
 });

@@ -1,8 +1,8 @@
 import {
   getCavityInsulationTypes,
   getSheathingTypesForCavityInsulation,
-  getUFactorForWall,
   calculateWallHeatTransferMultiplier,
+  getWallData,
 } from "./walls";
 
 describe("Wall Heat Transfer Utilities", () => {
@@ -35,21 +35,18 @@ describe("Wall Heat Transfer Utilities", () => {
   });
 
   test("getUFactorForWall returns correct U-factor for known combination", () => {
-    const uFactor = getUFactorForWall("None", '½" Gypsum Brd (R-0.5)');
-    expect(uFactor).toBe(0.271);
+    const wallData = getWallData("None", '½" Gypsum Brd (R-0.5)');
+    expect(wallData?.uFactor).toBe(0.271);
   });
 
   test("getUFactorForWall returns null for invalid cavity insulation type", () => {
-    const uFactor = getUFactorForWall(
-      "InvalidInsulation",
-      '½" Gypsum Brd (R-0.5)',
-    );
-    expect(uFactor).toBeNull();
+    const wallData = getWallData("InvalidInsulation", '½" Gypsum Brd (R-0.5)');
+    expect(wallData).toBeNull();
   });
 
   test("getUFactorForWall returns null for invalid sheathing type", () => {
-    const uFactor = getUFactorForWall("None", "InvalidSheathing");
-    expect(uFactor).toBeNull();
+    const wallData = getWallData("None", "InvalidSheathing");
+    expect(wallData).toBeNull();
   });
 
   test("calculateWallHeatTransferMultiplier calculates correctly", () => {

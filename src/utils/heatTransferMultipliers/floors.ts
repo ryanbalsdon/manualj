@@ -1,10 +1,18 @@
+import { interpolateHeatTransferMultiplier } from "./interpolationUtils";
+
 import { floorHeatTransferMultipliers as floorData } from "@/data/heatTransferMultipliers/floors";
 
 const buildFloorComponentMap = (() => {
   let cacheBuilt = false;
   const floorCache = new Map<
     string,
-    Map<string, Map<string, { uFactor: number }>>
+    Map<
+      string,
+      Map<
+        string,
+        { uFactor: number; htmByTemperature: { [key: number]: number } }
+      >
+    >
   >();
 
   return () => {
@@ -25,6 +33,7 @@ const buildFloorComponentMap = (() => {
 
       insulationMap.set(entry.insulationRValue, {
         uFactor: entry.uFactor,
+        htmByTemperature: entry.htmByTemperature,
       });
     }
 
@@ -56,11 +65,11 @@ export function getInsulationTypesForConstruction(
   return insulationMap ? Array.from(insulationMap.keys()) : [];
 }
 
-export function getUFactor(
+export function getFloorData(
   floorType: string,
   constructionType: string,
   insulationRValue: string,
-): number | null {
+): { uFactor: number; htmByTemperature: { [key: number]: number } } | null {
   const floorMap = buildFloorComponentMap();
   const constructionMap = floorMap.get(floorType);
   if (!constructionMap) return null;
@@ -68,8 +77,8 @@ export function getUFactor(
   const insulationMap = constructionMap.get(constructionType);
   if (!insulationMap) return null;
 
-  const uFactorData = insulationMap.get(insulationRValue);
-  return uFactorData ? uFactorData.uFactor : null;
+  const floorData = insulationMap.get(insulationRValue);
+  return floorData || null;
 }
 
 export function calculateHeatTransferMultiplier(
@@ -78,7 +87,13 @@ export function calculateHeatTransferMultiplier(
   insulationRValue: string,
   tempDifference: number,
 ): number | null {
-  const uFactor = getUFactor(floorType, constructionType, insulationRValue);
-  if (uFactor === null) return null;
-  return uFactor * tempDifference;
+  const floorData = getFloorData(floorType, constructionType, insulationRValue);
+  if (floorData === null) return null;
+
+  const { uFactor, htmByTemperature } = floorData;
+  return interpolateHeatTransferMultiplier(
+    htmByTemperature,
+    tempDifference,
+    uFactor,
+  );
 }

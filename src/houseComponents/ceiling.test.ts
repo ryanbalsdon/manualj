@@ -77,7 +77,7 @@ describe("Ceiling", () => {
 
   it("calculates heat loss correctly", () => {
     ceiling.area = 1;
-    expect(ceiling.calculateHeatLoss(20)).toBeCloseTo(11.98);
+    expect(ceiling.calculateHeatLoss(20)).toBeCloseTo(12);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
@@ -94,6 +94,6 @@ describe("Ceiling", () => {
     ceiling.ceilingType = "Ventilated Attic";
     ceiling.construction = "R-19 Insulation";
     ceiling.area = 1479;
-    expect(ceiling.calculateHeatLoss(75)).toBeCloseTo(5879.025);
+    expect(ceiling.calculateHeatLoss(75)).toBeCloseTo(5916);
   });
 });

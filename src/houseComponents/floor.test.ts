@@ -105,7 +105,7 @@ describe("Floor", () => {
 
   it("calculates heat loss correctly", () => {
     floor.area = 1;
-    expect(floor.calculateHeatLoss(20)).toBeCloseTo(6.24);
+    expect(floor.calculateHeatLoss(20)).toBeCloseTo(3.1);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
@@ -115,7 +115,7 @@ describe("Floor", () => {
     (testFloor as any)._insulationRValue = "invalid";
 
     expect(() => testFloor.calculateHeatLoss(20)).toThrow(
-      "Could not find U-Factor for combination",
+      "Could not calculate heat transfer multiplier for combination: invalid, invalid, invalid",
     );
   });
 

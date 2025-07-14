@@ -2,14 +2,14 @@ import {
   getDoorTypes,
   getGlassTypesForDoorType,
   getFrameTypesForWindowAndGlass,
-  getUFactor,
+  getDoorData,
   calculateHeatTransferMultiplier,
 } from "./doors";
 
 describe("Door Heat Transfer Utilities", () => {
-  test("getWindowTypes returns all window types", () => {
-    const windowTypes = getDoorTypes();
-    expect(windowTypes).toEqual([
+  test("getDoorTypes returns all door types", () => {
+    const doorTypes = getDoorTypes();
+    expect(doorTypes).toEqual([
       "Sliding Glass Doors",
       "French Doors",
       "Wood Doors",
@@ -17,7 +17,7 @@ describe("Door Heat Transfer Utilities", () => {
     ]);
   });
 
-  test("getGlassTypesForWindowType returns glass types for Sliding Glass Doors", () => {
+  test("getGlassTypesForDoorType returns glass types for Sliding Glass Doors", () => {
     const glassTypes = getGlassTypesForDoorType("Sliding Glass Doors");
     expect(glassTypes).toEqual([
       "Single Pane, Clear Glass",
@@ -31,8 +31,8 @@ describe("Door Heat Transfer Utilities", () => {
     ]);
   });
 
-  test("getGlassTypesForWindowType returns empty array for invalid window type", () => {
-    const glassTypes = getGlassTypesForDoorType("InvalidWindowType");
+  test("getGlassTypesForDoorType returns empty array for invalid door type", () => {
+    const glassTypes = getGlassTypesForDoorType("InvalidDoorType");
     expect(glassTypes).toEqual([]);
   });
 
@@ -44,9 +44,9 @@ describe("Door Heat Transfer Utilities", () => {
     expect(frameTypes).toEqual(["Wood Frame", "T.I.M. Frame", "Metal Frame"]);
   });
 
-  test("getFrameTypesForWindowAndGlass returns empty array for invalid window type", () => {
+  test("getFrameTypesForWindowAndGlass returns empty array for invalid door type", () => {
     const frameTypes = getFrameTypesForWindowAndGlass(
-      "InvalidWindowType",
+      "InvalidDoorType",
       "Single Pane, Clear Glass",
     );
     expect(frameTypes).toEqual([]);
@@ -60,58 +60,80 @@ describe("Door Heat Transfer Utilities", () => {
     expect(frameTypes).toEqual([]);
   });
 
-  test("getUFactor returns correct U-factor for known combination", () => {
-    const uFactor = getUFactor(
+  test("getDoorData returns correct U-factor and htmByTemperature for known combination", () => {
+    const doorData = getDoorData(
       "Sliding Glass Doors",
       "Single Pane, Clear Glass",
       "Wood Frame",
     );
-    expect(uFactor).toBe(0.99);
+    expect(doorData?.uFactor).toBe(0.99);
+    expect(doorData?.htmByTemperature).toBeDefined();
+    expect(doorData?.htmByTemperature[20]).toBe(19.8);
   });
 
-  test("getUFactor returns null for invalid window type", () => {
-    const uFactor = getUFactor(
-      "InvalidWindow",
+  test("getDoorData returns null for invalid door type", () => {
+    const doorData = getDoorData(
+      "InvalidDoor",
       "Single Pane, Clear Glass",
       "Wood Frame",
     );
-    expect(uFactor).toBeNull();
+    expect(doorData).toBeNull();
   });
 
-  test("getUFactor returns null for invalid glass type", () => {
-    const uFactor = getUFactor(
+  test("getDoorData returns null for invalid glass type", () => {
+    const doorData = getDoorData(
       "Sliding Glass Doors",
       "InvalidGlass",
       "Wood Frame",
     );
-    expect(uFactor).toBeNull();
+    expect(doorData).toBeNull();
   });
 
-  test("getUFactor returns null for invalid frame type", () => {
-    const uFactor = getUFactor(
+  test("getDoorData returns null for invalid frame type", () => {
+    const doorData = getDoorData(
       "Sliding Glass Doors",
       "Single Pane, Clear Glass",
       "InvalidFrame",
     );
-    expect(uFactor).toBeNull();
+    expect(doorData).toBeNull();
   });
 
-  test("calculateHeatTransferMultiplier calculates correctly", () => {
+  test("calculateHeatTransferMultiplier interpolates correctly within range", () => {
     const multiplier = calculateHeatTransferMultiplier(
       "Sliding Glass Doors",
       "Single Pane, Clear Glass",
       "Wood Frame",
-      20,
+      22.5, // Between 20 (19.8) and 25 (24.8)
     );
-    expect(multiplier).toBe(19.8); // 0.99 * 20
+    expect(multiplier).toBeCloseTo(22.3);
   });
 
-  test("calculateHeatTransferMultiplier returns null for invalid window type", () => {
+  test("calculateHeatTransferMultiplier falls back to uFactor for out-of-range tempDifference (below min)", () => {
     const multiplier = calculateHeatTransferMultiplier(
-      "InvalidWindow",
+      "Sliding Glass Doors",
       "Single Pane, Clear Glass",
       "Wood Frame",
-      20,
+      10, // Below minTemp of 20
+    );
+    expect(multiplier).toBeCloseTo(9.9);
+  });
+
+  test("calculateHeatTransferMultiplier falls back to uFactor for out-of-range tempDifference (above max)", () => {
+    const multiplier = calculateHeatTransferMultiplier(
+      "Sliding Glass Doors",
+      "Single Pane, Clear Glass",
+      "Wood Frame",
+      100, // Above maxTemp of 95
+    );
+    expect(multiplier).toBeCloseTo(99.0);
+  });
+
+  test("calculateHeatTransferMultiplier returns null for invalid door type", () => {
+    const multiplier = calculateHeatTransferMultiplier(
+      "InvalidDoor",
+      "Single Pane, Clear Glass",
+      "Wood Frame",
+      15,
     );
     expect(multiplier).toBeNull();
   });
@@ -121,7 +143,7 @@ describe("Door Heat Transfer Utilities", () => {
       "Sliding Glass Doors",
       "InvalidGlass",
       "Wood Frame",
-      20,
+      15,
     );
     expect(multiplier).toBeNull();
   });
@@ -131,7 +153,7 @@ describe("Door Heat Transfer Utilities", () => {
       "Sliding Glass Doors",
       "Single Pane, Clear Glass",
       "InvalidFrame",
-      20,
+      15,
     );
     expect(multiplier).toBeNull();
   });

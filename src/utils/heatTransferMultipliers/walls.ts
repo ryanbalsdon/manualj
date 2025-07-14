@@ -1,8 +1,16 @@
+import { interpolateHeatTransferMultiplier } from "./interpolationUtils";
+
 import { wallHeatTransferMultipliers as wallData } from "@/data/heatTransferMultipliers/walls";
 
 const buildWallComponentMap = (() => {
   let cacheBuilt = false;
-  const wallCache = new Map<string, Map<string, { uFactor: number }>>();
+  const wallCache = new Map<
+    string,
+    Map<
+      string,
+      { uFactor: number; htmByTemperature: { [key: number]: number } }
+    >
+  >();
 
   return () => {
     if (cacheBuilt) return wallCache;
@@ -16,6 +24,7 @@ const buildWallComponentMap = (() => {
 
       sheathingMap.set(entry.sheathing, {
         uFactor: entry.uFactor,
+        htmByTemperature: entry.htmByTemperature,
       });
     }
 
@@ -37,16 +46,16 @@ export function getSheathingTypesForCavityInsulation(
   return sheathingMap ? Array.from(sheathingMap.keys()) : [];
 }
 
-export function getUFactorForWall(
+export function getWallData(
   cavityInsulation: string,
   sheathing: string,
-): number | null {
+): { uFactor: number; htmByTemperature: { [key: number]: number } } | null {
   const wallMap = buildWallComponentMap();
   const sheathingMap = wallMap.get(cavityInsulation);
   if (!sheathingMap) return null;
 
-  const uFactorData = sheathingMap.get(sheathing);
-  return uFactorData ? uFactorData.uFactor : null;
+  const wallData = sheathingMap.get(sheathing);
+  return wallData || null;
 }
 
 export function calculateWallHeatTransferMultiplier(
@@ -54,7 +63,13 @@ export function calculateWallHeatTransferMultiplier(
   sheathing: string,
   tempDifference: number,
 ): number | null {
-  const uFactor = getUFactorForWall(cavityInsulation, sheathing);
-  if (uFactor === null) return null;
-  return uFactor * tempDifference;
+  const wallData = getWallData(cavityInsulation, sheathing);
+  if (wallData === null) return null;
+
+  const { uFactor, htmByTemperature } = wallData;
+  return interpolateHeatTransferMultiplier(
+    htmByTemperature,
+    tempDifference,
+    uFactor,
+  );
 }

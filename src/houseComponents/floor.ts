@@ -2,7 +2,7 @@ import {
   getFloorTypes,
   getConstructionTypesForFloorType,
   getInsulationTypesForConstruction,
-  getUFactor,
+  calculateHeatTransferMultiplier,
 } from "@/utils/heatTransferMultipliers/floors";
 
 export class Floor {
@@ -93,18 +93,19 @@ export class Floor {
   }
 
   calculateHeatLoss(temperatureDifference: number): number {
-    const uFactor = getUFactor(
+    const heatTransferMultiplier = calculateHeatTransferMultiplier(
       this._floorType,
       this._constructionType,
       this._insulationRValue,
+      temperatureDifference,
     );
 
-    if (uFactor === null) {
+    if (heatTransferMultiplier === null) {
       throw new Error(
-        `Could not find U-Factor for combination: ${this._floorType}, ${this._constructionType}, ${this._insulationRValue}`,
+        `Could not calculate heat transfer multiplier for combination: ${this._floorType}, ${this._constructionType}, ${this._insulationRValue}`,
       );
     }
 
-    return this.area * uFactor * temperatureDifference;
+    return this.area * heatTransferMultiplier;
   }
 }

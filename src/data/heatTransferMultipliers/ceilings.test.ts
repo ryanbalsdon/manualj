@@ -2,12 +2,12 @@ import { ceilingHeatTransferMultipliers } from "./ceilings";
 
 describe.each(ceilingHeatTransferMultipliers)(
   "for ceiling construction: $construction, type: $ceilingType",
-  ({ construction, ceilingType, uFactor, htmByTemperature }) => {
+  ({ uFactor, htmByTemperature }) => {
     const testCases = Object.entries(htmByTemperature).map(
       ([temperature, htm]) => ({
         temperature: parseInt(temperature, 10),
         htm,
-      })
+      }),
     );
 
     it.each(testCases)(
@@ -18,7 +18,7 @@ describe.each(ceilingHeatTransferMultipliers)(
         const upperBound = expectedHtm * 1.12;
         expect(htm).toBeGreaterThanOrEqual(lowerBound);
         expect(htm).toBeLessThanOrEqual(upperBound);
-      }
+      },
     );
-  }
+  },
 );

@@ -2,7 +2,7 @@ import {
   getFloorTypes,
   getConstructionTypesForFloorType,
   getInsulationTypesForConstruction,
-  getUFactor,
+  getFloorData,
   calculateHeatTransferMultiplier,
 } from "./floors";
 
@@ -61,50 +61,72 @@ describe("Floor Heat Transfer Utilities", () => {
     expect(insulationTypes).toEqual([]);
   });
 
-  test("getUFactor returns correct U-factor for known combination", () => {
-    const uFactor = getUFactor(
+  test("getFloorData returns correct U-factor and htmByTemperature for known combination", () => {
+    const floorData = getFloorData(
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
       "No Insulation",
     );
-    expect(uFactor).toBe(0.312);
+    expect(floorData?.uFactor).toBe(0.312);
+    expect(floorData?.htmByTemperature).toBeDefined();
+    expect(floorData?.htmByTemperature[20]).toBe(3.1);
   });
 
-  test("getUFactor returns null for invalid floor type", () => {
-    const uFactor = getUFactor(
+  test("getFloorData returns null for invalid floor type", () => {
+    const floorData = getFloorData(
       "InvalidFloorType",
       "Hardwood Floor",
       "No Insulation",
     );
-    expect(uFactor).toBeNull();
+    expect(floorData).toBeNull();
   });
 
-  test("getUFactor returns null for invalid construction type", () => {
-    const uFactor = getUFactor(
+  test("getFloorData returns null for invalid construction type", () => {
+    const floorData = getFloorData(
       "Unheated Basement or Crawl Space",
       "InvalidConstruction",
       "No Insulation",
     );
-    expect(uFactor).toBeNull();
+    expect(floorData).toBeNull();
   });
 
-  test("getUFactor returns null for invalid insulation type", () => {
-    const uFactor = getUFactor(
+  test("getFloorData returns null for invalid insulation type", () => {
+    const floorData = getFloorData(
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
       "InvalidInsulation",
     );
-    expect(uFactor).toBeNull();
+    expect(floorData).toBeNull();
   });
 
-  test("calculateHeatTransferMultiplier calculates correctly", () => {
+  test("calculateHeatTransferMultiplier interpolates correctly within range", () => {
     const multiplier = calculateHeatTransferMultiplier(
       "Unheated Basement or Crawl Space",
       "Hardwood Floor",
       "No Insulation",
-      15,
+      22.5, // Between 20 (3.1) and 25 (3.9)
     );
-    expect(multiplier).toBe(4.68); // 0.312 * 15
+    expect(multiplier).toBeCloseTo(3.5);
+  });
+
+  test("calculateHeatTransferMultiplier falls back to uFactor for out-of-range tempDifference (below min)", () => {
+    const multiplier = calculateHeatTransferMultiplier(
+      "Unheated Basement or Crawl Space",
+      "Hardwood Floor",
+      "No Insulation",
+      10, // Below minTemp of 20
+    );
+    expect(multiplier).toBeCloseTo(3.12);
+  });
+
+  test("calculateHeatTransferMultiplier falls back to uFactor for out-of-range tempDifference (above max)", () => {
+    const multiplier = calculateHeatTransferMultiplier(
+      "Unheated Basement or Crawl Space",
+      "Hardwood Floor",
+      "No Insulation",
+      100, // Above maxTemp of 95
+    );
+    expect(multiplier).toBeCloseTo(31.2);
   });
 
   test("calculateHeatTransferMultiplier returns null for invalid floor type", () => {

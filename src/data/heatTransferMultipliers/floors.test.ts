@@ -1,10 +1,10 @@
 import { floorHeatTransferMultipliers } from "./floors";
 
 const unheatedBasementOrCrawlSpaceFloors = floorHeatTransferMultipliers.filter(
-  (floor) => floor.floorType === "Unheated Basement or Crawl Space"
+  (floor) => floor.floorType === "Unheated Basement or Crawl Space",
 );
 const otherFloors = floorHeatTransferMultipliers.filter(
-  (floor) => floor.floorType !== "Unheated Basement or Crawl Space"
+  (floor) => floor.floorType !== "Unheated Basement or Crawl Space",
 );
 
 describe.each(unheatedBasementOrCrawlSpaceFloors)(
@@ -14,7 +14,7 @@ describe.each(unheatedBasementOrCrawlSpaceFloors)(
       ([temperature, htm]) => ({
         temperature: parseInt(temperature, 10),
         htm,
-      })
+      }),
     );
 
     it.each(testCases)(
@@ -28,9 +28,9 @@ describe.each(unheatedBasementOrCrawlSpaceFloors)(
         const upperBound = expectedHtm / 1.7;
         expect(htm).toBeGreaterThanOrEqual(lowerBound);
         expect(htm).toBeLessThanOrEqual(upperBound);
-      }
+      },
     );
-  }
+  },
 );
 
 describe.each(otherFloors)(
@@ -40,7 +40,7 @@ describe.each(otherFloors)(
       ([temperature, htm]) => ({
         temperature: parseInt(temperature, 10),
         htm,
-      })
+      }),
     );
 
     it.each(testCases)(
@@ -51,7 +51,7 @@ describe.each(otherFloors)(
         const upperBound = expectedHtm * 1.06;
         expect(htm).toBeGreaterThanOrEqual(lowerBound);
         expect(htm).toBeLessThanOrEqual(upperBound);
-      }
+      },
     );
-  }
+  },
 );

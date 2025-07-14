@@ -1,7 +1,7 @@
 import {
   getMasonryWallTypes,
   getInsulationTypesForMasonryWallType,
-  getUFactorsForMasonryWall,
+  getMasonryWallData,
   calculateMasonryWallHeatTransferMultiplierPerLinearFoot,
 } from "./masonryWalls";
 
@@ -23,23 +23,27 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
     expect(insulationTypes).toEqual([]);
   });
 
-  test("getUFactorsForMasonryWall returns correct U-factors for known combination", () => {
-    const uFactors = getUFactorsForMasonryWall('8" or 12" Block', "None");
-    expect(uFactors).toEqual({
-      uFactorAboveGrade: 0.51,
-      uFactorCrawlspace: 0.125,
-      uFactorBasement: 0.087,
-    });
+  test("getMasonryWallData returns correct U-factors and htmByTemperature for known combination", () => {
+    const masonryWallData = getMasonryWallData('8" or 12" Block', "None");
+    expect(masonryWallData?.uFactorAboveGrade).toBe(0.51);
+    expect(masonryWallData?.uFactorCrawlspace).toBe(0.125);
+    expect(masonryWallData?.uFactorBasement).toBe(0.087);
+    expect(masonryWallData?.htmByTemperatureAboveGrade).toBeDefined();
+    expect(masonryWallData?.htmByTemperatureAboveGrade[20]).toBe(10.2);
+    expect(masonryWallData?.htmByTemperatureCrawlspace).toBeDefined();
+    expect(masonryWallData?.htmByTemperatureCrawlspace?.[20]).toBe(2.5);
+    expect(masonryWallData?.htmByTemperatureBasement).toBeDefined();
+    expect(masonryWallData?.htmByTemperatureBasement?.[20]).toBe(1.7);
   });
 
-  test("getUFactorsForMasonryWall returns null for invalid wall type", () => {
-    const uFactors = getUFactorsForMasonryWall("InvalidWall", "None");
-    expect(uFactors).toBeNull();
+  test("getMasonryWallData returns null for invalid wall type", () => {
+    const masonryWallData = getMasonryWallData("InvalidWall", "None");
+    expect(masonryWallData).toBeNull();
   });
 
-  test("getUFactorsForMasonryWall returns null for invalid insulation type", () => {
-    const uFactors = getUFactorsForMasonryWall('8" or 12" Block', "Invalid");
-    expect(uFactors).toBeNull();
+  test("getMasonryWallData returns null for invalid insulation type", () => {
+    const masonryWallData = getMasonryWallData('8" or 12" Block', "Invalid");
+    expect(masonryWallData).toBeNull();
   });
 
   describe("calculateMasonryWallHeatTransferMultiplier", () => {
@@ -64,7 +68,7 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
           3,
           70,
         );
-      expect(multiplier).toBeCloseTo(204.75);
+      expect(multiplier).toBeCloseTo(204.6);
     });
 
     test("calculates correctly for basement (feetBelowGrade > 5)", () => {
@@ -76,7 +80,7 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
           6,
           70,
         );
-      expect(multiplier).toBeCloseTo(215.04);
+      expect(multiplier).toBeCloseTo(215.1);
     });
 
     test("returns null for invalid wall type", () => {
@@ -115,7 +119,7 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
       expect(multiplier).toBe(0);
     });
 
-    test("calculates correctly when uFactorCrawlspace is null for '4\" Brick + 8\" Block' and feetBelowGrade 2-5", () => {
+    test("calculates correctly when htmByTemperatureCrawlspace is null for '4\" Brick + 8\" Block' and feetBelowGrade 2-5", () => {
       const multiplier =
         calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
           '4" Brick + 8" Block',
@@ -127,7 +131,7 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
       expect(multiplier).toBeCloseTo(140);
     });
 
-    test("calculates correctly when uFactorBasement is null for '4\" Brick + 8\" Block' and feetBelowGrade > 5", () => {
+    test("calculates correctly when htmByTemperatureBasement is null for '4\" Brick + 8\" Block' and feetBelowGrade > 5", () => {
       const multiplier =
         calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
           '4" Brick + 8" Block',
@@ -148,8 +152,7 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
           5,
           75,
         );
-
-      expect(multiplier).toBeCloseTo(60.15);
+      expect(multiplier).toBeCloseTo(59.9);
     });
   });
 });

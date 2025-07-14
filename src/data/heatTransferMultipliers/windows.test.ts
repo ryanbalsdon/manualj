@@ -2,12 +2,12 @@ import { windowHeatTransferMultipliers } from "./windows";
 
 describe.each(windowHeatTransferMultipliers)(
   "for window type: $windowType, glass: $glassType, frame: $frameType",
-  ({ windowType, glassType, frameType, uFactor, htmByTemperature }) => {
+  ({ uFactor, htmByTemperature }) => {
     const testCases = Object.entries(htmByTemperature).map(
       ([temperature, htm]) => ({
         temperature: parseInt(temperature, 10),
         htm,
-      })
+      }),
     );
 
     it.each(testCases)(
@@ -18,7 +18,7 @@ describe.each(windowHeatTransferMultipliers)(
         const upperBound = expectedHtm * 1.05;
         expect(htm).toBeGreaterThanOrEqual(lowerBound);
         expect(htm).toBeLessThanOrEqual(upperBound);
-      }
+      },
     );
-  }
+  },
 );

@@ -2,12 +2,12 @@ import { doorHeatTransferMultipliers } from "./doors";
 
 describe.each(doorHeatTransferMultipliers)(
   "for door type: $doorType, glass: $glassType, frame: $frameType",
-  ({ doorType, glassType, frameType, uFactor, htmByTemperature }) => {
+  ({ uFactor, htmByTemperature }) => {
     const testCases = Object.entries(htmByTemperature).map(
       ([temperature, htm]) => ({
         temperature: parseInt(temperature, 10),
         htm,
-      })
+      }),
     );
 
     it.each(testCases)(
@@ -18,7 +18,7 @@ describe.each(doorHeatTransferMultipliers)(
         const upperBound = expectedHtm * 1.05;
         expect(htm).toBeGreaterThanOrEqual(lowerBound);
         expect(htm).toBeLessThanOrEqual(upperBound);
-      }
+      },
     );
-  }
+  },
 );

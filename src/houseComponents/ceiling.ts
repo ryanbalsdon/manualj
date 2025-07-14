@@ -1,7 +1,7 @@
 import {
   getCeilingTypes,
   getConstructionsForCeilingType,
-  getUFactor,
+  calculateHeatTransferMultiplier,
 } from "@/utils/heatTransferMultipliers/ceilings";
 
 export class Ceiling {
@@ -60,14 +60,18 @@ export class Ceiling {
   }
 
   calculateHeatLoss(temperatureDifference: number): number {
-    const uFactor = getUFactor(this._ceilingType, this._construction);
+    const htm = calculateHeatTransferMultiplier(
+      this._ceilingType,
+      this._construction,
+      temperatureDifference,
+    );
 
-    if (uFactor === null) {
+    if (htm === null) {
       throw new Error(
         `Could not find U-Factor for combination: ${this._ceilingType}, ${this._construction}`,
       );
     }
 
-    return this.area * uFactor * temperatureDifference;
+    return this.area * htm;
   }
 }

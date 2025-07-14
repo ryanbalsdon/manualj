@@ -69,7 +69,7 @@ describe("Wall", () => {
 
   it("calculates heat loss correctly", () => {
     wall.area = 1;
-    expect(wall.calculateHeatLoss(20)).toBeCloseTo(5.42);
+    expect(wall.calculateHeatLoss(20)).toBeCloseTo(5.4);
   });
 
   it("throws error for invalid combination in heat loss calculation", () => {
