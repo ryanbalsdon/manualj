@@ -3,7 +3,7 @@ import {
   getConstructionTypesForFloorType,
   getInsulationTypesForConstruction,
   calculateHeatTransferMultiplier,
-} from "@/utils/heatTransferMultipliers/floors";
+} from "@/repository/floors";
 
 export class Floor {
   private _floorType: string;

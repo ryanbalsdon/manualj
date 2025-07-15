@@ -2,7 +2,7 @@ import {
   calculateWallHeatTransferMultiplier,
   getCavityInsulationTypes,
   getSheathingTypesForCavityInsulation,
-} from "@/utils/heatTransferMultipliers/walls";
+} from "@/repository/walls";
 
 export class Wall {
   private _cavityInsulation: string;

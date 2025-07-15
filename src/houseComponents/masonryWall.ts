@@ -2,7 +2,7 @@ import {
   getMasonryWallTypes,
   getInsulationTypesForMasonryWallType,
   calculateMasonryWallHeatTransferMultiplierPerLinearFoot,
-} from "@/utils/heatTransferMultipliers/masonryWalls";
+} from "@/repository/masonryWalls";
 
 export class MasonryWall {
   private _wallType: string;

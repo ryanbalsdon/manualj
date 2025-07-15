@@ -1,31 +1,34 @@
+import {
+  interpolateHeatTransferMultiplier,
+  createMemoizedMapBuilder,
+  createHeatTransferRepository,
+} from "@/utils/repository";
 import { ceilingHeatTransferMultipliers as ceilingData } from "@/data/heatTransferMultipliers/ceilings";
-import { interpolateHeatTransferMultiplier } from "./interpolationUtils";
-import { createMemoizedMapBuilder } from "./mapBuilder";
-import { createHeatTransferRepository } from "./repositoryFactory";
 
 // Define the specific data structure for a ceiling entry
 type CeilingEntryData = {
   uFactor: number;
   htmByTemperature: { [key: number]: number };
-}
+};
 
 // Define key extractors for the ceiling data structure
 const ceilingKeyExtractors: [
-  (entry: typeof ceilingData[0]) => string,
-  (entry: typeof ceilingData[0]) => string,
-  (entry: typeof ceilingData[0]) => CeilingEntryData
+  (entry: (typeof ceilingData)[0]) => string,
+  (entry: (typeof ceilingData)[0]) => string,
+  (entry: (typeof ceilingData)[0]) => CeilingEntryData,
 ] = [
-  (entry) => entry.ceilingType,
-  (entry) => entry.construction,
-  (entry) => ({
-    uFactor: entry.uFactor,
-    htmByTemperature: entry.htmByTemperature,
-  }),
+  (entry: (typeof ceilingData)[0]) => entry.ceilingType,
+  (entry: (typeof ceilingData)[0]) => entry.construction,
+  (entry: (typeof ceilingData)[0]) =>
+    ({
+      uFactor: entry.uFactor,
+      htmByTemperature: entry.htmByTemperature,
+    }) satisfies CeilingEntryData,
 ];
 
 // Create the memoized map builder for ceilings
 const buildCeilingMap = createMemoizedMapBuilder<
-  typeof ceilingData[0],
+  (typeof ceilingData)[0],
   [string, string], // Keys: ceilingType, construction
   CeilingEntryData
 >(ceilingData, ceilingKeyExtractors);

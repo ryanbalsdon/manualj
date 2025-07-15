@@ -10,11 +10,7 @@ export type KeyExtractor<T, K> = (entry: T) => K;
  * This will typically be { uFactor: number; htmByTemperature: { [key: number]: number } }
  * or similar for masonry walls.
  */
-export type FinalValue = {
-  uFactor: number;
-  htmByTemperature: { [key: number]: number };
-  // ... other properties specific to the data type (e.g., uFactorAboveGrade, htmByTemperatureAboveGrade)
-};
+export type FinalValue = Record<string, unknown>;
 
 /**
  * The type of the nested map. This will be dynamic based on the number of key extractors.
@@ -41,11 +37,7 @@ export type NestedMap<K extends unknown[], V> = K extends [
  * @param keyExtractors An array of functions. Each function in this array takes a data entry object and returns the key for a specific level of the nested map. The last function in the array should return the final value to be stored at the deepest level of the map.
  * @returns A memoized function (`() => NestedMap<K, V>`) that, when called, returns the fully built nested `Map`.
  */
-export function createMemoizedMapBuilder<
-  T,
-  K extends unknown[],
-  V extends FinalValue,
->(
+export function createMemoizedMapBuilder<T, K extends unknown[], V>(
   rawData: T[],
   keyExtractors: [
     ...{ [I in keyof K]: KeyExtractor<T, K[I]> },
@@ -96,9 +88,14 @@ export function createMemoizedMapBuilder<
       groupedData.forEach((entries, key) => {
         if (extractorIndex === keyExtractors.length - 2) {
           // If next extractor is the final value extractor,  set it directly.
-          const finalValueExtractor = keyExtractors[extractorIndex + 1] as KeyExtractor<T, V>;
+          const finalValueExtractor = keyExtractors[
+            extractorIndex + 1
+          ] as KeyExtractor<T, V>;
           // We assume that for a given set of keys, there is only one entry.
-          (currentMap as Map<unknown, V>).set(key, finalValueExtractor(entries[0]));
+          (currentMap as Map<unknown, V>).set(
+            key,
+            finalValueExtractor(entries[0]),
+          );
         } else {
           // Otherwise, continue building the nested map structure.
           let nextMap = currentMap.get(key);
@@ -106,7 +103,11 @@ export function createMemoizedMapBuilder<
             nextMap = new Map();
             currentMap.set(key, nextMap);
           }
-          buildMapRecursive(entries, extractorIndex + 1, nextMap as Map<unknown, unknown>);
+          buildMapRecursive(
+            entries,
+            extractorIndex + 1,
+            nextMap as Map<unknown, unknown>,
+          );
         }
       });
       return currentMap;

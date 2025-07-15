@@ -154,5 +154,29 @@ describe("Masonry Wall Heat Transfer Utilities", () => {
         );
       expect(multiplier).toBeCloseTo(59.9);
     });
+
+    test("calculates correctly when htmByTemperatureCrawlspace is null for '4\" Brick + 8\" Block' with R-5 and feetBelowGrade 2-5", () => {
+      const multiplier =
+        calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
+          '4" Brick + 8" Block',
+          "R-5",
+          5,
+          3,
+          70,
+        );
+      expect(multiplier).toBeCloseTo(46.5);
+    });
+
+    test("calculates correctly when htmByTemperatureBasement is null for '4\" Brick + 8\" Block' with R-5 and feetBelowGrade > 5", () => {
+      const multiplier =
+        calculateMasonryWallHeatTransferMultiplierPerLinearFoot(
+          '4" Brick + 8" Block',
+          "R-5",
+          5,
+          6,
+          70,
+        );
+      expect(multiplier).toBeCloseTo(46.5);
+    });
   });
 });

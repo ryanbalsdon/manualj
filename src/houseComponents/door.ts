@@ -3,7 +3,7 @@ import {
   getGlassTypesForDoorType,
   getFrameTypesForWindowAndGlass,
   calculateHeatTransferMultiplier,
-} from "@/utils/heatTransferMultipliers/doors";
+} from "@/repository/doors";
 
 export class Door {
   private _doorType: string;

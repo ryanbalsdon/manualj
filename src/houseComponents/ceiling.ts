@@ -2,7 +2,7 @@ import {
   getCeilingTypes,
   getConstructionsForCeilingType,
   calculateHeatTransferMultiplier,
-} from "@/utils/heatTransferMultipliers/ceilings";
+} from "@/repository/ceilings";
 
 export class Ceiling {
   private _ceilingType: string;

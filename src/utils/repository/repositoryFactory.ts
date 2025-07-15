@@ -35,9 +35,12 @@ interface IHeatTransferRepository<TData> {
  * @param keyNames An array of strings representing the conceptual names of the keys at each level (e.g., `['doorType', 'glassType', 'frameType']`). This is primarily for internal clarity and documentation.
  * @returns An object (the "repository") with methods like `getAvailableOptions(key1, ...)`, `getData(key1, ..., lastKey)`.
  */
-export function createHeatTransferRepository<K extends unknown[], V extends FinalValue>(
+export function createHeatTransferRepository<
+  K extends unknown[],
+  V extends FinalValue,
+>(
   mapBuilder: () => NestedMap<K, V>,
-  keyNames: string[] // Can be used for more dynamic methods or just for documentation
+  keyNames: string[], // Can be used for more dynamic methods or just for documentation
 ): IHeatTransferRepository<V> {
   const map = mapBuilder();
 
@@ -68,7 +71,7 @@ export function createHeatTransferRepository<K extends unknown[], V extends Fina
 
     getData: (...keys: string[]): V | null => {
       const data = getNestedValue(keys);
-      return (data && !(data instanceof Map)) ? data as V : null;
+      return data && !(data instanceof Map) ? (data as V) : null;
     },
   };
 }

@@ -3,7 +3,7 @@ import {
   getGlassTypesForWindowType,
   getFrameTypesForWindowAndGlass,
   calculateWindowHeatTransferMultiplier,
-} from "@/utils/heatTransferMultipliers/windows";
+} from "@/repository/windows";
 
 export class Window {
   private _windowType: string;
