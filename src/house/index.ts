@@ -1,10 +1,10 @@
-import { Ceiling } from "./houseComponents/ceiling";
-import { Door } from "./houseComponents/door";
-import { Floor } from "./houseComponents/floor";
-import { Infiltration } from "./houseComponents/infiltration";
-import { MasonryWall } from "./houseComponents/masonryWall";
-import { Wall } from "./houseComponents/wall";
-import { Window } from "./houseComponents/window";
+import { Ceiling } from "./components/ceiling";
+import { Door } from "./components/door";
+import { Floor } from "./components/floor";
+import { Infiltration } from "./components/infiltration";
+import { MasonryWall } from "./components/masonryWall";
+import { Wall } from "./components/wall";
+import { Window } from "./components/window";
 
 export class House {
   ceiling: Ceiling;
